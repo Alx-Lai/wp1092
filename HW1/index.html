@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Hello world</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <body>
+        <section>
+            <audio id="audio" controls><source src="musics/music1.mp3"></audio>
+            <button class='button' onclick="Play_Pause()" ><img src="play_button.png" id="play_pause_image"></button>
+        </section>
+        <script>
+                function Play_Pause(){
+                    if(audio.paused || audio.ended){
+                        audio.play();
+                        document.getElementById('play_pause_image').src="pause_button.png";
+                    }else{
+                        audio.pause();
+                        document.getElementById('play_pause_image').src="play_button.png";
+                    }
+                }
+        </script>
+    </body>
+</html>
