@@ -84,13 +84,17 @@ body{
     left: 50%;
     transform: translate(-50%,-50%);
 }
-.progress{
+#progress_bar{
     height: 5px;
     background-color: #333333;
+    background: lime;
     width: 300px;
     position: absolute;
     top:85%;
     border-radius: 3px;
     left: 50%;
     transform: translate(-50%,-50%);
+}
+.mute{
+    
 }
