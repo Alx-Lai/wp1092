@@ -38,7 +38,7 @@ body{
     background-color: aliceblue;
     border-radius: 50px;
     height: 100px;
-    width: 500px;
+    width: 700px;
     opacity: 0.7;
     position: absolute;
     top: 80%;
@@ -92,9 +92,42 @@ body{
     position: absolute;
     top:85%;
     border-radius: 3px;
+    color: cadetblue;
     left: 50%;
     transform: translate(-50%,-50%);
 }
 .mute{
-    
+    background-image: url(sound.png);
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: 0.5s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(100px,-50%);
+}
+.mute:hover{
+    opacity: 0.5;  
+}
+
+.slider{
+    appearance:none;
+    width:100px;
+    height:3px;
+    border-radius: 2px;
+    background:#d3d3d3;
+    background-color: black;
+    outline: none;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(150px,-50%);
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+.slider:hover{
+    opacity: 1;
 }

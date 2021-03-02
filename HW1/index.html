@@ -8,7 +8,9 @@
     </head>
     <body>
         <section>
-            <audio id="audio" controls><source id="music_source" src="musics/music1.mp3"></audio>
+            <audio id="audio" controls>
+                <source id="music_source" src="musics/music1.mp3">
+            </audio>
             <div class="player">
                 <div class="info">
                     <div class="name"><p id="song_name">給我一首歌的時間</p></div>
@@ -20,6 +22,9 @@
                     <div class="play-pause"></div>
                     <div class="next"></div>
                     <div class="mute"></div>
+                    <div>
+                        <input type="range" min='0' max='100' value="100" class="slider" id="volume">
+                    </div>
                 </div>
                 
                 <div class="progress">

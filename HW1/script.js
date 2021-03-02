@@ -1,7 +1,8 @@
-//var load_audio = $('#audio');
+var load_audio = $('#audio');
 var total_song=2;
 var now_song=0;
 var song_info=[['給我一首歌的時間','周杰倫'],['東區東區','八三夭']];
+var mute=false;
 function next_song(){
     now_song+=1;
     now_song%=total_song;
@@ -43,7 +44,7 @@ function initProgressBar(){
     var length = audio.duration;
     var current_time =audio.currentTime;
     $("#progress_bar").attr("value",current_time/length);
-    console.log(current_time);
+    //console.log(current_time);
 }
 function last_song(){
     now_song-=1;
@@ -67,10 +68,10 @@ function last_song(){
 $('.play-pause').click(function(){
     if(audio.paused){
         audio.play();
-        $('.play-pause').css('background-image',"url('pause_button.png')")
+        $('.play-pause').css('background-image',"url('pause_button.png')");
     }else{
         audio.pause();
-        $('.play-pause').css('background-image',"url('play_button.png')")
+        $('.play-pause').css('background-image',"url('play_button.png')");
     }
 })
 
@@ -79,5 +80,19 @@ $('.next').click(function(){
     next_song();
 })
 $('.last').click(function(){
-    next_song();
+    last_song();
 })
+$('.mute').click(function(){
+    mute=!mute;
+    if(mute){
+        $('.mute').css('background-image',"url('mute.png')");
+        document.getElementById('audio').volume=0;
+    }else{
+        $('.mute').css('background-image',"url('sound.png')");
+        document.getElementById('audio').volume=1;
+    }
+})
+$('#volume').change(function(){
+    console.log(document.getElementById('volume').value/100);
+      document.getElementById('audio').volume=document.getElementById('volume').value/100;
+})  
