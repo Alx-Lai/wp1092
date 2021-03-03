@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Image Viewer</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            media="screen"
+            href="styles.css"
+        />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <!-- Try to implement an HTML that looks like the reference example:
+        ./images/screenshot.png  -->
+        <!-- Please use the class names and IDs as defined in styles.css
+         so that the outlook can be the same as the reference. -->
+            <div class="image-viewer__container">
+                <div class="image-viewer__title">Image Viewer</div>
+                <div class="image-viewer__main">
+                    <div class="image-viewer__button">
+                        <img class="disabled" id="back_button" src="images/back.png">
+                    </div>
+                    <div class="image-viewer__display">
+                        <img id="display" src="images/loading.gif">
+                        <div class="image-viewer__display-source-wrapper">
+                            <span>Source:<a id="source"></a></span>
+                        </div>
+                    </div>
+                    <div class="image-viewer__button">
+                        <img id="next_button" src="images/next.png">
+                    </div>
+                </div>
+            </div>
+            
+        <script src="main.js"></script>
+    </body>
+</html>
