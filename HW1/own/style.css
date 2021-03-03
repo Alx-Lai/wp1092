@@ -1,0 +1,132 @@
+body{
+    font-family: "FangSong","Brush Script MT",cursive;
+    background-color: bisque;
+}
+.play-pause{
+    background-image: url('play_button.png');
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: 0.5s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.play-pause:hover{
+   opacity: 0.5; 
+}
+.next{
+    background-image: url('next_button.png');
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: 0.5s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(40px,-50%);
+}
+.next:hover{
+    opacity: 0.5;
+}
+.player_covering{
+    background-color: aliceblue;
+    border-radius: 50px;
+    height: 100px;
+    width: 700px;
+    opacity: 0.7;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: -1;
+}
+.song_covering{
+    background-image:url(music1_cover.jpg);
+    height: 400px;
+    width: 300px;
+    position: absolute;
+    top: 35%;
+    left: 50%;
+    border-radius:25px;
+    transform: translate(-50%,-50%);
+}
+.last{
+    background-image: url('last_button.png');
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: 0.5s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(-100px,-50%);
+}
+.last:hover{
+    opacity: 0.5;
+}
+#song_name{
+    position: absolute;
+    top: 65%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#singer_name{
+    position: absolute;
+    top: 68%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+#progress_bar{
+    height: 5px;
+    background-color: #333333;
+    background: lime;
+    width: 300px;
+    position: absolute;
+    top:85%;
+    border-radius: 3px;
+    color: cadetblue;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+.mute{
+    background-image: url(sound.png);
+    height: 50px;
+    width: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 1;
+    transition: 0.5s;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(100px,-50%);
+}
+.mute:hover{
+    opacity: 0.5;  
+}
+
+.slider{
+    appearance:none;
+    width:100px;
+    height:3px;
+    border-radius: 2px;
+    background:#d3d3d3;
+    outline: none;
+    position: absolute;
+    top: 80%;
+    left: 50%;
+    transform: translate(150px,-50%);
+    opacity: 0.7;
+    transition: opacity .2s;
+}
+.slider:hover{
+    opacity: 1;
+}
