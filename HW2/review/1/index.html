@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Image Viewer</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            media="screen"
+            href="styles.css"
+        />
+    </head>
+    <body>
+        <!-- Try to implement an HTML that looks like the reference example:
+        ./images/screenshot.png  -->
+        <!-- Please use the class names and IDs as defined in styles.css
+         so that the outlook can be the same as the reference. -->
+
+        <div class= "image-viewer__container">
+            <h1 class = "image-viewer__title"> Image Viewer </h1>
+            
+            <div class = "image-viewer__main">
+                <button type="button" onclick="prePic()" id = "BP" class = "disabled"><img src="./images/back.png" id = "previous"></button>
+                
+                <div class = "image-viewer__display">
+                    <img id = "IM" src="https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg" width = 500 height = 280>
+
+                    <div class = "image-viewer__display-source-wrapper">
+                        <span>source:<a id = "IMS" href="https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg">https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.jpg</a></span>
+                    </div>
+                
+                </div>
+
+                <button type="button" onclick="nextPic()" id = "BN" class = "image-viewer__button"><img src="./images/next.png" id = "next"></button>
+            </div>
+        </div>
+
+        <script src="main.js"></script>
+    </body>
+</html>
