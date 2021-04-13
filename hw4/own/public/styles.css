@@ -5,14 +5,12 @@ table{
     border-collapse: collapse;
     overflow: auto;
     font: 20px;
+    position: absolute;
+    top: 70px;
+    left: 70px;
 }
 .row_front{
     background-color: #f0f0f0;
-}
-.container{
-    position: absolute;
-    left:70px;
-    top:70px;
 }
 #row_wrapper{
     position: absolute;
@@ -20,6 +18,9 @@ table{
     left: 0px;
     width: 70px;
     height: 140px;
+}
+body{
+    background-color: lightgray;
 }
 #col_wrapper{
     position: absolute;
@@ -62,8 +63,8 @@ button{
     height: 70px;
     width: 70px;
     font-size: 50px;
-    background-color:antiquewhite;
-    border: 2px black solid;
+    background-color:white;
+    border: 2px darkgray solid;
 }
 th{
     background-color: #f0f0f0;
