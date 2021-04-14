@@ -32,6 +32,7 @@ body{
 textarea{
     height: 100%;
     width: 100%;
+    display: block;
     padding: 0;
     vertical-align: bottom;
     border: none;
@@ -43,9 +44,9 @@ textarea:focus{
 td{
     border: 2px black solid;
     background-color: white;
-    padding: 8px;
+    padding: 0px;
 }
-#focused{
+.focused{
     border: 4px blue solid;
 }
 #focused_th{
@@ -56,9 +57,13 @@ td{
 }
 td span{
     display: block;
-    width: 100px;
-    height: 20px;
+    width: 120px;
+    height: 35px;
+    /*padding: 8px;*/
 }
+/*.row_front{
+    width: 50;
+}*/
 button{
     height: 70px;
     width: 70px;

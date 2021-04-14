@@ -1,23 +1,44 @@
-import {useState,useRef} from 'react';
+import {useState,useRef,useEffect} from 'react';
 const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{    
     var row_length = Text_array[0].length;
     const textInput = useRef();
     function onClickHandle(e){
         var id = e.target.id.split('+');
-        var x=id[0];
-        var y=id[1];
-        if(x==toggle.x && y==toggle.y){
-            setToggle({x:toggle.x,y:toggle.y,count:toggle.count+1});
+        var x=parseInt(id[0]);
+        var y=parseInt(id[1]);
+        setToggle({x:x,y:y,count:1});
+    }
+    function onClickHandle2(e){
+        setToggle({x:toggle.x,y:toggle.y,count:2});
+    }
+    
+    function keydownHandle(e){
+        //console.log(e);
+        console.log(toggle);
+        if(toggle.count==1){
+            //console.log('yes');
+            var arr = Text_array;
+            textInput.current.value='';
             textInput.current.focus();
-        }else{
-            setToggle({x:x,y:y,count:1});
+            setToggle({x:toggle.x,y:toggle.y,count:2});
         }
     }
+    useEffect(()=>{
+        //console.log(toggle);
+        if(toggle.count==1){
+            textInput.current?.blur();
+            window.addEventListener('keydown',keydownHandle);
+            //console.log(textInput.current);
+        }
+        return ()=>{
+            window.removeEventListener('keydown',keydownHandle);
+        };
+    })
     function FocusOutHandle(e){
         var arr = Text_array;
         var input = e.target.value;
         arr[toggle.x][toggle.y]= input;
-        console.log(input);
+        //console.log(input);
         if(input.startsWith('=')){
             console.log('=');
             var process_input=input.replace(/\s*/g,"");
@@ -39,7 +60,6 @@ const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{
                 var new_toggle = {x:toggle.x+1,y:toggle.y,count:1};
                 setToggle(new_toggle);
             }
-            textInput.current.focus();
         }else{
             //console.log(e.key);
         }
@@ -51,7 +71,7 @@ const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{
             setToggle({x:toggle.x,y:-2,count:0});
         }else{
             var id_p = id.slice(5);
-            setToggle({x:id_p,y:-2,count:0});   
+            setToggle({x:parseInt(id_p),y:-2,count:0});   
         } 
     }
     var count={x:-1,y:-1};
@@ -63,7 +83,7 @@ const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{
             <tr>
                 {
                     (count.x == toggle.x)?
-                    <td id='focused_row' className='row_front' onClick={f_row_click_Handle}>{count.x+1}</td>
+                    <td style={{width: 50 + 'px'}} id='focused_row' className='row_front' onClick={f_row_click_Handle}>{count.x+1}</td>
                     :
                     <td id={'f_row'+count.x} className='row_front' onClick={f_row_click_Handle}>{count.x+1}</td>
                 }
@@ -74,9 +94,9 @@ const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{
                     }
                     if(toggle.x==count.x && toggle.y==count.y && toggle.count > 0){
                         return (
-                            <td id='focused'><textarea id='textbox' onBlur={FocusOutHandle}
-                            onKeyPress={Key_pressed} ref={textInput}
-                            />{element}</td>
+                            <td class='focused' id={count.x+'+'+count.y}><textarea id='textbox' onBlur={FocusOutHandle}
+                            onKeyPress={Key_pressed} ref={textInput} onClick={onClickHandle2}
+                            >{element}</textarea></td>
                         )
                     }else{
                         return (<td><span id={count.x+'+'+count.y} onClick={onClickHandle}>{element}</span>
