@@ -34,19 +34,53 @@ const Tbody = ({Text_array,toggle,setText_array,setToggle})=>{
             window.removeEventListener('keydown',keydownHandle);
         };
     })
+    function english_to_index(s){
+        var ret=0;
+        for(var i=0;i<s.length;i++){
+            ret*=26;
+            ret+=s.charCodeAt(i)-'A'.charCodeAt(0)+1;
+        }
+        return ret-1;
+    }
     function FocusOutHandle(e){
         var arr = Text_array;
         var input = e.target.value;
         arr[toggle.x][toggle.y]= input;
-        //console.log(input);
+        console.log(input);
         if(input.startsWith('=')){
             console.log('=');
             var process_input=input.replace(/\s*/g,"");
+            process_input = process_input.slice(1);
             process_input.toUpperCase();
-            if(process_input.startsWith('=SUM')){
+            var defined = false;
+            if(process_input.startsWith('SUM')){
                 console.log('=sum');
-            }else if(process_input.charAt(0)){
-                     
+                defined = true;
+            }
+            if(!defined && process_input.match(/^[A-Z]+[0-9]+$/i) != null){
+                var pos = process_input.match(/[0-9]+/i).index;
+                var eng_part = process_input.slice(0,pos);
+                var num_part = process_input.slice(pos);
+                var eng_pos = english_to_index(eng_part);
+                console.log(eng_part+'+',num_part);
+                if(Text_array[num_part-1][eng_pos]!=undefined){
+                    var arr = Text_array;
+                    arr[toggle.x][toggle.y] = Text_array[num_part-1][eng_pos];
+                    setText_array(arr);
+                    defined= true;
+                }
+            }
+            if(!defined){
+                try{
+                    var arr = Text_array;
+                    arr[toggle.x][toggle.y] = eval(process_input);
+                    setText_array(arr);
+                    defined = true;
+                } catch (e){
+                    var arr = Text_array;
+                    arr[toggle.x][toggle.y] = "ERROR!";
+                    setText_array(arr);
+                }
             }
         }
         setText_array(arr);

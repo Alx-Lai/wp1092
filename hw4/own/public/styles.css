@@ -37,6 +37,7 @@ textarea{
     vertical-align: bottom;
     border: none;
     resize: none;
+    font-size: 20px;
 }
 textarea:focus{
     outline: none;
@@ -76,4 +77,7 @@ th{
     text-align: center;
     border: 2px black solid;
     padding: 8px;
+}
+span{
+    font-size: 20px;
 }
