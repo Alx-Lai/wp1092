@@ -22,6 +22,7 @@ function MergeSchool() {
     const [step, setStep] = useState(0);
     const [win, setWin] = useState(false);
     const [seed, setSeed] = useState(secret_seed);
+    const [newblock,setNewBlock] = useState([[3,0],[3,1]]);
 
     // Pesudo random number generator
     // 4 bytes hashing function By Thomas Wang or Robert Jenkins
@@ -65,6 +66,7 @@ function MergeSchool() {
         setStep(0);
         setGameover(false);
         setWin(false);
+        setNewBlock([[3,0],[3,1]]);
         // #########################
         // # 7 Add something yourself
         // boardset.board will be the initial board, please use it directly
@@ -95,6 +97,7 @@ function MergeSchool() {
         } 
         let random_empty_grid = empty_grid[random_num];
         board[random_empty_grid[0]][random_empty_grid[1]] = 2;
+        
         return {board};
     }
     
@@ -343,7 +346,7 @@ function MergeSchool() {
         <>      
             <Header step={step} qs_ranking={qs_ranking} initializeBoard={initializeBoard} 
             best_qs_ranking={best_qs_ranking}/>
-            <Board2048 className="wrapper" board={board} gameover={gameover} initializeBoard={initializeBoard} win={win}/>
+            <Board2048 className="wrapper" board={board} gameover={gameover} initializeBoard={initializeBoard} win={win} newblock={newblock}/>
             <div className="btn-groups">
                 <div className="btn-useful" id="badend-btn" onClick={setBadEnd}>BadEnd</div>
                 <div className="btn-useful" id="goodend-btn" onClick={setGoodEnd}>GoodEnd</div>
