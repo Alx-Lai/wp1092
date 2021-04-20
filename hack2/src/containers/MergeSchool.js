@@ -313,10 +313,11 @@ function MergeSchool() {
     // #########################
     // # 4 Implement yourself
     useEffect(() => {
-        window.addEventListener('keydown', handleKeyDown);
+        var body = document.querySelector('body');
+        body.addEventListener('keydown', handleKeyDown);
 
         return () => {
-            window.removeEventListener('keydown', handleKeyDown);
+            body.removeEventListener('keydown', handleKeyDown);
         };
     });
     // You might need something to capture keyboard input
