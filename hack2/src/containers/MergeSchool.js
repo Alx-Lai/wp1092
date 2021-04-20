@@ -63,6 +63,8 @@ function MergeSchool() {
         setBoard(newboard);
         setQs_ranking(32768);
         setStep(0);
+        setGameover(false);
+        setWin(false);
         // #########################
         // # 7 Add something yourself
         // boardset.board will be the initial board, please use it directly
@@ -241,17 +243,7 @@ function MergeSchool() {
 
             // #########################
             // # 5 Implement yourself
-            /*var merge_count = 1;
-            for(var i=0;i<4;i++){
-                for(var j=0;j<4;j++){
-                    if(board[i][j]!=0){
-                        merge_count++;
-                    }
-                    if(nextBoard.board[i][j]!=0){
-                        merge_count--;
-                    }
-                }
-            }*/
+            
             qsRankNow-=nextBoard.combination;
             if(qsRankNow < best_qs_ranking){
                 setBest_qs_ranking(qsRankNow);
@@ -264,8 +256,9 @@ function MergeSchool() {
             // #########################
             // # 7 Implement yourself
             // #########################
-
-            if (checkGameover(nextBoardSetWithRandom.board)) {
+            if(checkWin(nextBoardSetWithRandom.board)){
+                setWin(true);
+            }else if (checkGameover(nextBoardSetWithRandom.board)) {
                 setGameover(true);
             }
         }
@@ -289,6 +282,11 @@ function MergeSchool() {
         // #########################
         // # 10 Implement yourself
         // #########################
+        for(var i=0;i<4;i++){
+            for(var j=0;j<4;j++){
+                if(board[i][j]==65536){return true;}
+            }
+        }
         return false;
     }
     
@@ -345,7 +343,7 @@ function MergeSchool() {
         <>      
             <Header step={step} qs_ranking={qs_ranking} initializeBoard={initializeBoard} 
             best_qs_ranking={best_qs_ranking}/>
-            <Board2048 className="wrapper" board={board} />
+            <Board2048 className="wrapper" board={board} gameover={gameover} initializeBoard={initializeBoard} win={win}/>
             <div className="btn-groups">
                 <div className="btn-useful" id="badend-btn" onClick={setBadEnd}>BadEnd</div>
                 <div className="btn-useful" id="goodend-btn" onClick={setGoodEnd}>GoodEnd</div>
