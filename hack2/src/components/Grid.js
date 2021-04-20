@@ -1,7 +1,7 @@
 export default function Grid ({row_idx,row_idy,row_value}) {
     
     let grid_id = 'grid-'+row_idx+'-'+row_idy;
-    let value_id = 'value'+row_idx+'-'+row_idy;
+    let value_id = 'value-'+row_idx+'-'+row_idy;
     let temp_class_name = 'grid';
     let value = row_value;
     if(value == 0){
