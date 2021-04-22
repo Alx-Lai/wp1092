@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+}
+
+span.cell {
+    display: inline-block;
+    height: 20px;
+    width: 50px;
+    background-color: powderblue;
+    border: 1px solid black;
+    margin: 0px;
+    padding: 2.5px;
+}
