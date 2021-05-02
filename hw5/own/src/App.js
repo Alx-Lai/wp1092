@@ -12,12 +12,19 @@ function App() {
     <div>
       <button
         onClick={async () => {
-          await startGame()
-          setHasStarted(true)
-        }}
+          let msg = await startGame()
+          if(msg == 'Network Error'){
+              setStatus('Network Error')
+          }else{
+              setStatus('')
+              setHasStarted(true)
+          }
+        }
+        }
       >
         start game
       </button>
+    <p>{status}</p>
     </div>
   )
 
@@ -26,14 +33,20 @@ function App() {
       <p>you won! the number was {number}.</p>
       <button
         onClick={async () => {
-          await restart()
-          setHasWon(false)
-          setStatus('')
-          setNumber('')
+          let msg = ''
+            msg = await restart()
+          if(msg == 'Network Error'){
+            setStatus('Network Error')
+          }else{
+            setHasWon(false)
+            setStatus('')
+            setNumber('')
+          }
         }}
       >
         restart
       </button>
+        <p>{status}</p>
     </>
   )
 

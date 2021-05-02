@@ -2,6 +2,7 @@ import axios from 'axios'
 
 const instance = axios.create({ baseURL: 'http://localhost:4000/api/guess' })
 
+
 const startGame = async () => {
   let msg = ''
   await instance.post('/start')
@@ -37,11 +38,11 @@ const guess = async (number) => {
 }
 
 const restart = async () => {
-  const {
-    data: { msg }
-  } = await instance.post('/restart').catch((e)=>{
+  let msg = ''
+    await instance.post('/restart').catch((e)=>{
       if(e == 'Error: Network Error'){
             msg = 'Network Error';
+            return msg;
       }
   })
 
