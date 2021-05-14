@@ -61,7 +61,9 @@ const Body = () => {
       subject,
       score,
     });
-
+    setName('');
+    setSubject('');
+    setScore('');
     if (!card) addErrorMessage(message);
     else addCardMessage(message);
   };
@@ -69,12 +71,12 @@ const Body = () => {
   const handleQuery = async () => {
     const {
       data: { messages, message },
-    } = await axios.get('/api/query' , {
+    } = await axios.post('/api/query' , {
       queryType,
       queryString,
     }); // TODO: axios.xxx call the right api
-
-    if (!messages) addErrorMessage(message);
+    //setQueryString('')
+    if (messages === undefined) addErrorMessage(message);
     else addRegularMessage(...messages);
   };
 

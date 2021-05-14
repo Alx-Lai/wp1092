@@ -41,16 +41,38 @@ router.delete('/clear', async function(req, res){
 // router.delete(...)
 
 
-router.get('/query', async function(req, res) {
-  console.log(req);
+router.post('/query', async function(req, res) {
   const {queryType, queryString} = req.body;
+  console.log(queryType, queryString);
   try{
+    let result, rule, msg
     if(queryType === 'name'){
-      let result = await scorecard.findAll().paginate({name: queryString}).exec();
+      rule = {'name' : queryString};
     }else if(queryType === 'subject'){
-      let result = await scorecard.findAll().paginate({subject: queryString}).exec();
+      rule = {'subject' : queryString};
     }
-    res.status(200).send(result);
+    //console.log('find')
+    result = await ScoreCard.find();
+    /*console.log(result);
+    console.log(result.length)
+    console.log(result[0])
+    console.log(typeof(result[0]))*/
+    let processed = [];
+    for(var i=0;i<result.length;i++){
+      if(queryType === 'name' && result[i].name === queryString){
+        processed.push([result[i].name +" " +result[i].subject+ " " +result[i].score])
+      }else if(queryType === 'subject' && result[i].subject === queryString){
+        processed.push([result[i].name +" " +result[i].subject+ " " +result[i].score])
+      }
+    }
+    //console.log(processed)
+    if(processed.length == 0){
+      let str = "" + queryType + '(' + queryString + ')not found';
+      res.json({message : str})
+    }else{
+      res.status(200).send({messages : processed, message: 'ok'});
+    }
+    console.log('find end')
   }catch(e){
     res.json({message: 'something went wrong...'})
   }
