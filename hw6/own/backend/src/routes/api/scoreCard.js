@@ -52,18 +52,14 @@ router.post('/query', async function(req, res) {
       rule = {'subject' : queryString};
     }
     //console.log('find')
-    result = await ScoreCard.find();
+    result = await ScoreCard.find(rule);
     /*console.log(result);
     console.log(result.length)
     console.log(result[0])
     console.log(typeof(result[0]))*/
     let processed = [];
     for(var i=0;i<result.length;i++){
-      if(queryType === 'name' && result[i].name === queryString){
-        processed.push([result[i].name +" " +result[i].subject+ " " +result[i].score])
-      }else if(queryType === 'subject' && result[i].subject === queryString){
-        processed.push([result[i].name +" " +result[i].subject+ " " +result[i].score])
-      }
+      processed.push([result[i].name +" " +result[i].subject+ " " +result[i].score])
     }
     //console.log(processed)
     if(processed.length == 0){
@@ -72,7 +68,6 @@ router.post('/query', async function(req, res) {
     }else{
       res.status(200).send({messages : processed, message: 'ok'});
     }
-    console.log('find end')
   }catch(e){
     res.json({message: 'something went wrong...'})
   }
