@@ -82,7 +82,7 @@ function App() {
             </optgroup>
             <optgroup label={keys[1]}>
             { 
-              dat[keys[0]].map((i)=>{
+              dat[keys[1]].map((i)=>{
                   return(make_item(i,'start'))
               })
             }
@@ -100,7 +100,7 @@ function App() {
             </optgroup>
             <optgroup label={keys[1]}>
             { 
-              dat[keys[0]].map((i)=>{
+              dat[keys[1]].map((i)=>{
                   return(make_item(i,'end'))
               })
             }
