@@ -4,7 +4,7 @@ function Station(props) {
   const data = props.info;
   let num = props.i;
   let len = props.len
-  console.log(num)
+  //console.log(num)
   let color = data.station_type
   if(color == 'O'){
     color = 'orange'

@@ -56,6 +56,14 @@ function App() {
     let key = Object.keys(data);
     return data[key[num]]
   }
+  let dat = data.data;
+  let keys = Object.keys(dat);
+  function make_item(e,start){
+    console.log(e);
+    return (
+      <option id={start+'-group-'+e.station_id}>{e.station_name}</option>
+    )
+  }
   return (
     <div className="wrapper">
       <div className="welcome-title"><h1>Welcome to MRT Distance Calculator !</h1></div>
@@ -64,20 +72,39 @@ function App() {
           
           <span id="start-station-span">起始站</span>
           <select id="start-select" className="start-station"> {/* you should add both onChange and value to attributes */}
-            <option></option>
-            {
-              // generate options of all stations within option group
-              // coding here ...
+            
+            <optgroup label={keys[0]}>
+            { 
+              dat[keys[0]].map((i)=>{
+                  return(make_item(i,'start'))
+              })
             }
+            </optgroup>
+            <optgroup label={keys[1]}>
+            { 
+              dat[keys[0]].map((i)=>{
+                  return(make_item(i,'start'))
+              })
+            }
+            </optgroup>
           </select>
 
           <span id="end-station-span">終點站</span>
           <select id="end-select" className="end-station"> {/* you should add both onChange and value to attributes */}
-            <option></option>
-            {
-              // generate options of all stations within option group
-              // coding here ...
+            <optgroup label={keys[0]}>
+            { 
+              dat[keys[0]].map((i)=>{
+                  return(make_item(i,'end'))
+              })
             }
+            </optgroup>
+            <optgroup label={keys[1]}>
+            { 
+              dat[keys[0]].map((i)=>{
+                  return(make_item(i,'end'))
+              })
+            }
+            </optgroup>
           </select>
 
           <button onClick={calculateDistance} id="search-btn">查詢距離</button>
