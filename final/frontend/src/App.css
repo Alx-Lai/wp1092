@@ -1,38 +1,68 @@
+@import '~antd/dist/antd.css';
+
 .App {
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.PlayScreen{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  width: 1010px;
+  height: 621px;
+  margin:auto;
+  margin-top: 100px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.UserList-view{
+  flex: 1;
+  background-color: azure;
+  margin: 10px;
+  border-radius: 10px;
+  overflow-y: scroll;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.CanvasAndChat-view{
+  flex: 2;
+  margin: 10px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
-.App-link {
-  color: #61dafb;
+.Canvas{
+  background-color:azure;
+  flex:2;
+  margin: 10px;
+  border-radius: 10px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Chat{
+  flex:1;
+  background-color: azure;
+  margin: 10px;
+  border-radius: 10px;
+}
+
+.LogIn-view{
+  background-color: azure;
+  width:  350px;
+  height: 421px;
+  border-radius: 10px;
+  margin:auto;
+  margin-top: 210px;
+}
+
+.LogIn-title{
+  font-family: ComicSansMS;
+  font-size: 60px;
+}
+
+.LogIn-name{
+  width: 200px;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 80px;
 }
