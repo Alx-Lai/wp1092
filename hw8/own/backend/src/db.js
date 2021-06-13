@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -22,3 +21,11 @@ const chatBoxSchema = new Schema({
 const UserModel = mongoose.model('User', userSchema);
 const ChatBoxModel = mongoose.model('ChatBox', chatBoxSchema);
 const MessageModel = mongoose.model('Message', messageSchema);
+
+const db = {
+  UserModel,
+  ChatBoxModel,
+  MessageModel,
+}
+
+export default db;
