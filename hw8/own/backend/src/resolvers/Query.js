@@ -4,7 +4,7 @@ const Query = {
       return db.ChatBoxModel.find();
     }
     let box = await db.ChatBoxModel.findOne({name})
-    console.log(box)  
+    //console.log(box)  
     return box
           .populate('users')
           .populate({ path: 'messages', populate: 'sender' })

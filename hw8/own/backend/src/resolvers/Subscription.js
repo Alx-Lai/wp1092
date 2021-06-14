@@ -5,7 +5,7 @@ const Subscription = {
       if(!box){
         throw new Error("box Not Found");
       }
-      console.log(name)
+      //console.log(name)
       return pubsub.asyncIterator(`message ${name}`);
     }
   },
