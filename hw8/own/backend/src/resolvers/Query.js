@@ -1,10 +1,14 @@
 const Query = {
-  chatboxes(parent, {name}, {db}, info){
+  async chatboxes(parent, {name}, {db}, info){
     if(!name){
       return db.ChatBoxModel.find();
     }
-    let chatbx = db.ChatBoxModel.findOne({'name': name})
-    return chatbx;
+    let box = await db.ChatBoxModel.findOne({name})
+    console.log(box)  
+    return box
+          .populate('users')
+          .populate({ path: 'messages', populate: 'sender' })
+          .execPopulate();
   },
 };
 

@@ -7,9 +7,9 @@ type Mutation {
   createMessage(name1: String!, name2: String!, body: String!): Message!
 }
 
-#type Subscription {
-  # ... message(name: String!): Message!
-#}
+type Subscription {
+  chatBox(name: String!): Message!
+}
 
 type User {
   id: ID!

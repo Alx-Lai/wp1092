@@ -1,13 +1,12 @@
 const Subscription = {
-  message: {
-    subscribe(parent, {ChatboxId}, {db, pubsub}, info){
-      const chatbx = db.ChatBoxModel.find((chatBox)=>{
-        chatBox.id === ChatboxId;
-      });
-      if(!chatbx){
+  chatBox: {
+    subscribe(parent, {name}, {db, pubsub}, info){
+      const box = db.ChatBoxModel.findOne({name});
+      if(!box){
         throw new Error("box Not Found");
       }
-      return pubsub.asyncIterator(`message ${ChatboxId}`);
+      console.log(name)
+      return pubsub.asyncIterator(`message ${name}`);
     }
   },
 };
