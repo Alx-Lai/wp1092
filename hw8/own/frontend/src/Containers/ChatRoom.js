@@ -1,7 +1,7 @@
 import "../App.css";
 import { useState, useEffect } from "react";
 import useChatBox from '../hooks/useChatBox'
-import { Tabs, Input} from "antd";
+import { Tabs, Input, Badge} from "antd";
 import ChatModal from '../Components/ChatModal'
 import ChatBox from "../Components/ChatBox";
 import { useMutation, useQuery } from "@apollo/react-hooks";
@@ -62,29 +62,6 @@ const ChatRoom = ({ me, displayStatus}) => {
       }
     }
   }, [subscribeToMore, activeKey]);
-  /*useEffect(() => {
-    console.log('sub data?')
-    try {
-      subscribeToMore({
-        document: CHATBOX_SUBSCRIPTION,
-        variables:{name : activeKey},
-        updateQuery: (prev, { subscriptionData }) => {
-          if (!subscriptionData.data) return prev;
-          console.log('sub data')
-          console.log(subscriptionData.data)
-          const newMessage = subscriptionData.data.message.data;
-
-          return {
-            ...prev,
-            messages: [newMessage, ...prev.messages],
-          };
-        },
-      });
-    } catch (e) {
-      console.log(e)
-    }
-  });
-  */
   return (
     <> 
       <Title me={me}/>
