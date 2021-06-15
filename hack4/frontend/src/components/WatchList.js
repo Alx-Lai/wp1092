@@ -4,14 +4,13 @@ import constants from '../constants';
 import {STATSCOUNT_QUERY} from '../graphql'
 
 export default function WatchList() {
-    let counts=new Object();
     // TODO
     // query countStats
     // save the result in a counts variable
     //const {loading, error, data} = useQuery(STATSCOUNT_QUERY,{ variables: {locationKeywords:constants.watchList}})
     const {loading, error, data} = useQuery(STATSCOUNT_QUERY,{ variables: {severity: 1,locationKeywords:constants.watchList}})
     console.log(data);
-    counts.statsCount=data.statsCount
+    let counts=data
     // TODO
     // use subscription
     

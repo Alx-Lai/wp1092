@@ -1,5 +1,5 @@
 const Query = {
-    statsCount(parent, args, {db}, info){
+    async statsCount(parent, args, {db}, info){
         try{
             var p1;
             if(!args.severity){
@@ -14,10 +14,10 @@ const Query = {
             //console.log(args.locationKeywords)
             let ret = []
             for(var i=0;i<args.locationKeywords.length;i++){
-                let p2 = p1.filter((person)=>{
+                let p2 = await p1.filter((person)=>{
                     return person.location.description.includes(args.locationKeywords[i])
                 })
-                ret.push(p2.length)
+                await ret.push(p2.length)
             }
             console.log(ret)
             return ret
