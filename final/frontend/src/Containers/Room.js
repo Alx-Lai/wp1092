@@ -13,7 +13,7 @@ const Room = ({me})=>{
           <Canvas />
           <div className = "Chat">
             <div className="Chat-messages"></div>
-            <Input.Search placeholder="guess here..." enterButton="send"></Input.Search>
+            <Input.Search id="searchBar" placeholder="guess here..." enterButton="send"></Input.Search>
           </div>
         </div>
       </div>

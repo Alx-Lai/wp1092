@@ -12,7 +12,7 @@
   width: 1010px;
   height: 621px;
   margin:auto;
-  margin-top: 100px;
+  margin-top: 60px;
 }
 
 .UserList-view{
@@ -24,6 +24,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  height: 657px;
   /* align-items: stretch; */
 }
 
@@ -144,14 +145,25 @@ img:hover{
 
 #color_picker{
   border: 0;
-  margin: 0;
-  padding: 0;
   background-color: transparent;
-  width: 30px;
   height: 30px;
 }
+
+.icon{
+  margin: 10px;
+}
+
 .toolbar{
-  background-color:deepskyblue;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
+  background-color:rgb(224, 223, 215);
+  border-radius: 5px;
+  width: 220px;
+  height: 50px;
+  margin: 15px;
+  display: flex;
+  flex-direction: row;
+}
+
+#searchBar{
+  margin-left: 1px;
+  border-radius: 5px;
 }
