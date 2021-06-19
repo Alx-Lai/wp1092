@@ -66,11 +66,3 @@
   margin-right: 50px;
   margin-bottom: 80px;
 }
-
-canvas {
-  background-color:azure;
-  margin: 10px;
-  height: 100%;
-  width: 100%;
-  border-radius: 10px;
-}
