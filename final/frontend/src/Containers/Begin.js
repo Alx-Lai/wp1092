@@ -1,14 +1,17 @@
 import '../App.css';
-import {Button, Input, Avatar} from "antd";
-import { UserOutlined } from '@ant-design/icons';
+import {Button, Input, Avatar, Badge} from "antd";
+import { UserOutlined, EditOutlined } from '@ant-design/icons';
+import { useState} from "react";
 
 const Begin = ({setStart, setMe})=>{  
-    const colorList =["254E70", "37718E", "8EE3EF"]
+    const colorList =["#BAD4AA","#73D2DE", "#FFE381","#C33C54","#A7ACD9", "#EF8354","#1C448E","#8CDEDC", "#38302E", "#FF715B","#FFA69E", "#424B54", "#84DCCF"]
+    const [color, setcolor] = useState(0);
     return(
         <div className="LogIn-view">
             <p className="LogIn-title">Gartic</p>
-            <Avatar style={{ backgroundColor: '#87d068' }} size={90} className="LogIn-avatar" icon={<UserOutlined />} />
-            <Input className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{setMe({name: n.target.value, me:true, score:0});}} />
+            <span><Avatar style={{ backgroundColor: colorList[color] }} size={90}  className="LogIn-avatar" icon={<UserOutlined />} />
+            <EditOutlined onClick={()=>setcolor((color==11)? 0: color+1)} style={{ fontSize: '200%'}}/></span>
+            <Input className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{setMe({name: n.target.value, me:true, score:0, color:colorList[color]});}} />
             <Button type="primary" onClick={()=>setStart(true)}>Play</Button>
         </div>
     )

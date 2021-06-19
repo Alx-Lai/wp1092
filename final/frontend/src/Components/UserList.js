@@ -3,7 +3,7 @@ import { Avatar } from 'antd';
 const UserList = ({users})=>{
     return(users.map((n, i)=>(
         <div className={(n.me==true)?"myuserbox": "userbox"} style={{marginTop: (i==0)?"10px":"0px"}}>
-            <Avatar className="userbox_avatar" size={54} icon={<UserOutlined />} />
+            <Avatar style={{ backgroundColor: n.color }} className="userbox_avatar" size={54} icon={<UserOutlined />} />
             <p className="userbox_name">{n.name}<br/><span className="userbox_score">score: {n.score}</span></p>
         </div>
     )))
