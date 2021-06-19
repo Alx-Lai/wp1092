@@ -119,3 +119,25 @@
   width: 200px;
   margin-bottom: 20px;
 }
+
+img{
+  transition: 0.3s;
+}
+
+img:hover{
+  opacity: 0.5;
+}
+
+#color_picker{
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  width: 30px;
+  height: 30px;
+}
+.toolbar{
+  background-color:deepskyblue;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
