@@ -5,9 +5,10 @@ import { useState, useEffect } from "react";
 
 const App= ()=> {
   const [start, setStart] = useState(false);
+  const [me, setMe] = useState({});
   return (
     <div className="App">
-      {start? (<Room/>) : (<Begin setStart = {setStart}/>)}
+      {start? (<Room me={me}/>) : (<Begin setStart = {setStart} setMe={setMe}/>)}
     </div>
   );
 }

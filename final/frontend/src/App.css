@@ -21,6 +21,57 @@
   margin: 10px;
   border-radius: 10px;
   overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  /* align-items: stretch; */
+}
+
+.userbox{
+  /* flex: 1; */
+  height: 80px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: rgb(214, 246, 214);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  /* justify-items: center; */
+}
+
+.myuserbox{
+  /* flex: 1; */
+  height: 80px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  background-color: rgb(169, 255, 183);
+  border-radius: 5px;
+  display: flex;
+  flex-direction: row;
+  /* justify-items: center; */
+}
+
+.userbox_score{
+  font-size: 14px;
+  /* width: 120px; */
+  text-align: left;
+}
+
+.userbox_name{
+  font-size: 20px;
+  margin: 10px;
+  /* width: 120px; */
+  text-align: left;
+}
+
+.userbox_avatar{
+  margin: 15px;
+}
+
+.LogIn-avatar{
+  margin-bottom: 20px;
 }
 
 .CanvasAndChat-view{
@@ -53,6 +104,10 @@
   border-radius: 10px;
   margin:auto;
   margin-top: 210px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  align-items: center;
 }
 
 .LogIn-title{
@@ -62,7 +117,5 @@
 
 .LogIn-name{
   width: 200px;
-  margin-left: 50px;
-  margin-right: 50px;
-  margin-bottom: 80px;
+  margin-bottom: 20px;
 }
