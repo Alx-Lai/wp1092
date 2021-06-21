@@ -1,0 +1,16 @@
+{
+  "name": "own",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "cd frontend && yarn start",
+    "server": "cd backend && yarn server"
+  },
+  "dependencies": {
+    "apollo-link-ws": "^1.0.20",
+    "graphql": "^15.5.0",
+    "react-apollo": "^3.1.5",
+    "subscriptions-transport-ws": "^0.9.19"
+  }
+}
