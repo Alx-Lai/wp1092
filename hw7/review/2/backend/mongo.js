@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // i use mongodb://localhost:27017/cardmongo for MONGO_URL
 
 function connectMongo() {
-  mongoose.connect('mongodb://localhost:27017/testmongo', {
+  mongoose.connect('mongodb+srv://4gpeanut:XD221165@cluster0.gfzch.mongodb.net/hw7?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   });

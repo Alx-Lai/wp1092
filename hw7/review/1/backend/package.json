@@ -1,28 +1,18 @@
 {
-  "name": "backend",
+  "name": "testmongo",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "start": "nodemon src/index.js --ext js,graphql --exec babel-node",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "server": "nodemon src/index.js — ext js,graphql — exec babel-node"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv-defaults": "^2.0.2",
-    "graphql-yoga": "^1.17.4",
-    "mongoose": "^5.12.13"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.8.4",
-    "@babel/core": "^7.9.6",
-    "@babel/node": "^7.8.7",
-    "@babel/plugin-proposal-class-properties": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
-    "@babel/plugin-transform-arrow-functions": "^7.8.3",
-    "@babel/preset-env": "^7.9.6",
-    "nodemon": "^2.0.4"
+    "express": "^4.17.1",
+    "mongoose": "^5.12.10",
+    "nodemon": "^2.0.7",
+    "uuid": "^8.3.2",
+    "ws": "^7.4.5"
   }
 }

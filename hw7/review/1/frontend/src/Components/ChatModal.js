@@ -1,13 +1,13 @@
 import { Modal, Form, Input } from "antd";
 
-const ChatModal = ({ visible, onCreate, 
-  onCancel }) => {
+const ChatModal = ({ visible, onCreate, onCancel }) => {
   const [form] = Form.useForm();
   return (
     <Modal
       visible={visible}
       title="Create a new chat room"
-      okText="Create" cancelText="Cancel"
+      okText="Create" 
+      cancelText="Cancel"
       onCancel={onCancel}
       onOk={() => {
         form.validateFields().then((values) => {
