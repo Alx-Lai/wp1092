@@ -54,17 +54,18 @@ const wss = new WebSocket.Server({
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let LastRoom = {};
-const Rooms = {};
+let Rooms = {};
+const clientRooms = {};
 let RoomCount = 0
 const validateRoom = async ()=>{
-  if(!LastRoom || !LastRoom.users || LastRoom.users.length >= 10){
-    LastRoom = new RoomModel();
-    LastRoom.save()
-    RoomCount += 1;
+  if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
+    Rooms[RoomCount] = new RoomModel();
+    Rooms[RoomCount].save()
+  }else if(Rooms[RoomCount].users.length >= 10){
+    RoomCount++;
+    Rooms[RoomCount] = new RoomModel();
+    Rooms[RoomCount].save()
   }
-  console.log('LastRoom')
-  console.log(LastRoom)
   return RoomCount;
 }
 
@@ -84,10 +85,10 @@ wss.on('connection', function connection(client) {
         newUser.save();
         const roomNumber = await validateRoom();
         client.roomNumber = roomNumber
-        if(!Rooms[client.roomNumber]){
-          Rooms[client.roomNumber] = new Set()
+        if(!clientRooms[client.roomNumber]){
+          clientRooms[client.roomNumber] = new Set()
         }
-        Rooms[client.roomNumber].forEach((client)=>{
+        clientRooms[client.roomNumber].forEach((client)=>{
           client.sendEvent({
             type: 'JOIN',
             data:{
@@ -95,29 +96,25 @@ wss.on('connection', function connection(client) {
             }
           })
         })
-        if(!LastRoom.users){
-          LastRoom.users = []
+        if(!Rooms[client.roomNumber].users){
+          Rooms[client.roomNumber].users = []
         }
         client.sendEvent({
           type: 'JOINALL',
           data:{
-            userList: LastRoom.users
+            userList: Rooms[client.roomNumber].users
           }
         })
-        console.log('joinAll');
-        console.log(LastRoom.users);
-        console.log('newUser')
-        console.log(newUser);
-        LastRoom.users.push(newUser);
-        console.log(LastRoom.users);
-        Rooms[client.roomNumber].add(client);
-        if(Rooms[client.roomNumber] === 3){
-          Rooms[client.roomNumber].forEach((client)=>{
+        Rooms[client.roomNumber].users.push(newUser);
+        clientRooms[client.roomNumber].add(client);
+        if(clientRooms[client.roomNumber].size === 3){
+          clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
               data:{}
             })
           })
+          console.log('start')
         }
 
         break;
@@ -128,7 +125,7 @@ wss.on('connection', function connection(client) {
     }
     // disconnected
     client.once('close', () => {
-      Rooms[client.roomNumber].delete(client);
+      clientRooms[client.roomNumber].delete(client);
     });
   });
 });
