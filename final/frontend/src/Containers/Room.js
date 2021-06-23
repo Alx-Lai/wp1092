@@ -3,8 +3,30 @@ import Canvas from '../Components/Canvas';
 import { useState, useEffect } from "react";
 import UserList from '../Components/UserList';
 import {Input} from "antd";
-const Room = ({me})=>{ 
+import useGame from "../Hooks/useGame";
+const Room = ({me, info})=>{ 
     const [users, setusers] = useState([me]); 
+    const {status} = useGame();
+    useEffect(() => {
+      if(status.type == "START"){ //{type:"START"}
+        // setStart(true)
+        console.log("start");
+      }
+      if(status.type == "JOIN"){ 
+        setusers(...users, {name: status.data.name, me: false, score: status.data.score, color: status.data.color })
+      }
+      if(status.type == "DRAW"){
+        //TODO
+      }
+    }, [status])
+
+    useEffect(() => {
+      setusers(me,...info.map(n=>{
+        let a = n;
+        a.me = false;
+        return a;
+      }))
+    }, [info])
     return(
 
         <div className="PlayScreen">
