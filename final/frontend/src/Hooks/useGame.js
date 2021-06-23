@@ -8,6 +8,7 @@ const useGame = () =>{
         let {data} = message;
         data = JSON.parse(data);
         setStatus(data);
+        console.log(data);
     }
 
     const sendData = async (data)=>{
