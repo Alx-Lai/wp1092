@@ -10,6 +10,7 @@ const Room = ({me, info})=>{
     const [usernum, setusernum] = useState(1);
     const {status} = useGame();
     const [gamestart, setgamestart] = useState(false);
+    const [displayText, setdisplayText] = useState("gartic")
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
         // setStart(true)
@@ -46,10 +47,11 @@ const Room = ({me, info})=>{
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
-          <Canvas />
+          {/* <Canvas /> */}
+          <div className="Canvas">{}</div>
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
-            <div className="Chat-messages"></div>
+            <div className="Chat-messages">{displayText}</div>
             <Input.Search id="searchBar" placeholder="guess here..." enterButton="send"></Input.Search>
           </div>
         </div>
