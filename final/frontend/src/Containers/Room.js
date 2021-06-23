@@ -20,7 +20,6 @@ const Room = ({me, info})=>{
         setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color }])
       }
       if(status.type == "LEAVE"){ 
-        console.log(users)
         setusers(users.filter(n=>n._id !== status.data.id))
       }
       if(status.type == "DRAW"){
