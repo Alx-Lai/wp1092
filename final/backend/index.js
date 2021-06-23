@@ -15,6 +15,29 @@ require('dotenv-defaults').config();
 /*                               MONGOOSE MODELS                              */
 /* -------------------------------------------------------------------------- */
 
+const userSchema = new Schema({
+  name: { type: String, require: true},
+  score: {type: Number},
+});
+const messageSchema = new Schema({
+  sender: {type: mongoose.Types.ObjectId, ref: User},
+  body: {type: String, require: true},
+})
+const problemSchema = new Schema({
+  answer: {type: String, require: true},
+})
+const roomSchema = new Schema({
+  users: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
+  messages: [{type: mongoose.Types.ObjectId, ref: 'Message'}],
+  problems : [{type: mongoose.Types.ObjectId, ref: 'Problem'}],
+  round: {type: Number},
+})
+
+const UserModel = mongoose.model('User', userSchema);
+const MessageModel = mongoose.model('Message', messageSchema);
+const ProblemModel = mongoose.model('Problem', messageSchema);
+const RoomModel = mongoose.model('Room', roomSchema);
+
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
 /* -------------------------------------------------------------------------- */
