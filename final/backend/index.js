@@ -81,8 +81,12 @@ wss.on('connection', function connection(client) {
         const {
           data:{name, color},
         } = message;
+        
+        client.name = name
         const newUser = new UserModel({name: name, color: color, score: 0});
         newUser.save();
+        client.userid = newUser._id;
+        console.log(client.userid)
         const roomNumber = await validateRoom();
         client.roomNumber = roomNumber
         if(!clientRooms[client.roomNumber]){
@@ -126,6 +130,14 @@ wss.on('connection', function connection(client) {
     // disconnected
     client.once('close', () => {
       clientRooms[client.roomNumber].delete(client);
+      clientRooms[client.roomNumber].forEach((client)=>{
+        client.sendEvent({
+          type: 'LEAVE',
+          data:{
+            id: client.userid
+          }
+        })
+      })
     });
   });
 });
