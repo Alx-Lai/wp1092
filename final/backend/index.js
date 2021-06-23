@@ -133,12 +133,12 @@ wss.on('connection', function connection(client) {
       Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
         return user._id !== client.userid
       })
-      console.log(Rooms[client.roomNumber].users);
+      let id = client.userid
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
           type: 'LEAVE',
           data:{
-            id: client.userid
+            id: id
           }
         })
       })
