@@ -4,13 +4,16 @@ import { useState, useEffect } from "react";
 import UserList from '../Components/UserList';
 import {Input} from "antd";
 import useGame from "../Hooks/useGame";
+import Waiting from './Waiting';
 const Room = ({me, info})=>{ 
     const [users, setusers] = useState([me]); 
+    const [usernum, setusernum] = useState(1);
     const {status} = useGame();
+    const [gamestart, setgamestart] = useState(false);
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
         // setStart(true)
-        console.log("start");
+        setgamestart(true);
       }
       if(status.type == "JOIN"){ 
         console.log('status.data');
@@ -30,12 +33,21 @@ const Room = ({me, info})=>{
         return a;
       })])
     }, [info])
+
+    useEffect(() => {
+      setusernum(users.length);
+      // if(users.length>=3){
+      //   setgamestart(true);
+      // }
+    }, [users])
+
     return(
 
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
           <Canvas />
+          <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
             <div className="Chat-messages"></div>
             <Input.Search id="searchBar" placeholder="guess here..." enterButton="send"></Input.Search>
