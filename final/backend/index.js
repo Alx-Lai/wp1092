@@ -14,7 +14,7 @@ require('dotenv-defaults').config();
 /* -------------------------------------------------------------------------- */
 /*                               MONGOOSE MODELS                              */
 /* -------------------------------------------------------------------------- */
-
+const { Schema } = mongoose;
 const userSchema = new Schema({
   name: { type: String, require: true},
   score: {type: Number},
