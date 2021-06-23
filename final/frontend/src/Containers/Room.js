@@ -17,9 +17,11 @@ const Room = ({me, info})=>{
         setgamestart(true);
       }
       if(status.type == "JOIN"){ 
-        console.log('status.data');
-        console.log(status.data)
         setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color }])
+      }
+      if(status.type == "LEAVE"){ 
+        console.log(users)
+        setusers(users.filter(n=>n._id !== status.data.id))
       }
       if(status.type == "DRAW"){
         //TODO
@@ -35,12 +37,7 @@ const Room = ({me, info})=>{
       })])
     }, [info])
 
-    useEffect(() => {
-      setusernum(users.length);
-      // if(users.length>=3){
-      //   setgamestart(true);
-      // }
-    }, [users])
+    useEffect(() => setusernum(users.length), [users])
 
     return(
 
@@ -48,10 +45,10 @@ const Room = ({me, info})=>{
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
           {/* <Canvas /> */}
-          <div className="Canvas">{}</div>
+          <div className="Canvas">{displayText}</div>
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
-            <div className="Chat-messages">{displayText}</div>
+            <div className="Chat-messages"></div>
             <Input.Search id="searchBar" placeholder="guess here..." enterButton="send"></Input.Search>
           </div>
         </div>
