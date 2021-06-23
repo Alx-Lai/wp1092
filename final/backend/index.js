@@ -130,6 +130,10 @@ wss.on('connection', function connection(client) {
     // disconnected
     client.once('close', () => {
       clientRooms[client.roomNumber].delete(client);
+      Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
+        return user._id !== client.userid
+      })
+      console.log(Rooms[client.roomNumber].users);
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
           type: 'LEAVE',
