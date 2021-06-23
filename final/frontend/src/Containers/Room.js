@@ -5,12 +5,13 @@ import UserList from '../Components/UserList';
 import {Input} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
-const Room = ({me, info})=>{ 
+const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
     const {status} = useGame();
     const [gamestart, setgamestart] = useState(false);
-    const [displayText, setdisplayText] = useState("gartic")
+    const [displayText, setdisplayText] = useState("gartic");
+    const [isdrawing, setisdrawing] = useState(false);
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
         // setStart(true)
@@ -43,8 +44,7 @@ const Room = ({me, info})=>{
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
-          {/* <Canvas /> */}
-          <div className="Canvas">{displayText}</div>
+          {(isdrawing)? <Canvas />: <div className="Canvas">{displayText}</div>}
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
             <div className="Chat-messages"></div>
