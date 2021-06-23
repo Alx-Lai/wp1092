@@ -58,16 +58,16 @@ let LastRoom = {};
 const Rooms = {};
 let RoomCount = 0
 const validateRoom = async ()=>{
-  if(LastRoom.users.length >= 10){
+  if(!LastRoom || !LastRoom.users || LastRoom.users.length >= 10){
     LastRoom = new RoomModel();
     LastRoom.save()
     RoomCount += 1;
   }
-  return LastRoom
+  return [LastRoom
       .populate('users')
       .populate({path:'messages', pupulate:'sender'})
       .populate('problems')
-      .execPopulate(), RoomCount;
+      .execPopulate(), RoomCount];
 }
 
 wss.on('connection', function connection(client) {
@@ -84,8 +84,11 @@ wss.on('connection', function connection(client) {
         } = message;
         const newUser = new UserModel({name: name, color: color, score: 0});
         newUser.save();
-        const room, roomNumber = await validateRoom();
+        let [room, roomNumber] = await validateRoom();
         client.roomNumber = roomNumber
+        if(!Rooms[client.roomNumber]){
+          Rooms[client.roomNumber] = new Set()
+        }
         Rooms[client.roomNumber].forEach((client)=>{
           client.sendEvent({
             type: 'JOIN',
@@ -94,15 +97,22 @@ wss.on('connection', function connection(client) {
             }
           })
         })
+        console.log('newUser')
+        console.log(newUser);
+        if(!room.users){
+          room.users = []
+        }
         client.sendEvent({
-          type: 'JOIN',
+          type: 'JOINALL',
           data:{
             userList: room.users
           }
         })
+        console.log('jionall');
+        console.log(room.users);
         room.users.push(newUser);
         Rooms[client.roomNumber].add(client);
-        if(room.users.length === 3){
+        if(Rooms[client.roomNumber] === 3){
           Rooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',

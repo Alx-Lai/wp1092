@@ -13,7 +13,9 @@ const Room = ({me, info})=>{
         console.log("start");
       }
       if(status.type == "JOIN"){ 
-        setusers(...users, {name: status.data.name, me: false, score: status.data.score, color: status.data.color })
+        console.log('status.data');
+        console.log(status.data)
+        setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color }])
       }
       if(status.type == "DRAW"){
         //TODO
@@ -21,11 +23,12 @@ const Room = ({me, info})=>{
     }, [status])
 
     useEffect(() => {
-      setusers(me,...info.map(n=>{
+      console.log(info)
+      setusers([me,...info.map(n=>{
         let a = n;
         a.me = false;
         return a;
-      }))
+      })])
     }, [info])
     return(
 
