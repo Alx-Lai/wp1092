@@ -12,8 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "dotenv-defaults": "^2.0.2",
-    "mongoose": "^5.12.14",
     "express": "^4.17.1",
+    "mongoose": "^5.12.14",
     "uuid": "^8.3.2",
     "ws": "^7.4.5"
   },

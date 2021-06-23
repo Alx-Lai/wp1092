@@ -17,7 +17,7 @@ const Room = ({me, info})=>{
         setgamestart(true);
       }
       if(status.type == "JOIN"){ 
-        setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color }])
+        setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color, _id: status.data.userList._id}])
       }
       if(status.type == "LEAVE"){ 
         setusers(users.filter(n=>n._id !== status.data.id))
