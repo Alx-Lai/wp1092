@@ -35,7 +35,7 @@ const roomSchema = new Schema({
 
 const UserModel = mongoose.model('User', userSchema);
 const MessageModel = mongoose.model('Message', messageSchema);
-const ProblemModel = mongoose.model('Problem', messageSchema);
+const ProblemModel = mongoose.model('Problem', problemSchema);
 const RoomModel = mongoose.model('Room', roomSchema);
 
 /* -------------------------------------------------------------------------- */
