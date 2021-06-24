@@ -22,6 +22,7 @@ const userSchema = new Schema({
   score: {type: Number},
 });
 const messageSchema = new Schema({
+  roomNumber:{type: Number},
   sender: {type: mongoose.Types.ObjectId, ref: 'User'},
   body: {type: String, require: true},
   correct: {type: Boolean}
@@ -35,11 +36,19 @@ const roomSchema = new Schema({
   problems : [{type: mongoose.Types.ObjectId, ref: 'Problem'}],
   round: {type: Number},
 })
+const pointSchema = new Schema({
+  roomNumber:{type:Number},
+  x: {type:Number, require:true},
+  y: {type:Number, require:true},
+  color: {type:String, require:true},
+})
+
 
 const UserModel = mongoose.model('User', userSchema);
 const MessageModel = mongoose.model('Message', messageSchema);
 const ProblemModel = mongoose.model('Problem', problemSchema);
 const RoomModel = mongoose.model('Room', roomSchema);
+const PointModel = mongoose.model('Point', pointSchema);
 
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
@@ -60,7 +69,6 @@ let Rooms = {};
 const clientRooms = {};
 let Answers = {};
 let RoomCount = 0
-let Messages = {}
 let Rounds = {}
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
@@ -114,14 +122,29 @@ wss.on('connection', function connection(client) {
             userList: Rooms[client.roomNumber].users
           }
         })
-        if(Messages[client.roomNumber]){
-          Messages[client.roomNumber].map((msg)=>{
-            client.sendEvent({
-              type:'MESSAGE',
-              data: msg
-            })
+        client.sendEvent({
+          type: 'MYID',
+          data:{
+            id: client._id
+          }
+        })
+        //load previous message
+        const messages = MessageModel.find({roomNumber:client.roomNumber})
+        messages.map((msg)=>{
+          client.sendEvent({
+            type:'MESSAGE',
+            data: msg
           })
-        }
+        })
+
+        //load previous picture
+        const points = PointModel.find({roomNumber:client.roomNumber})
+        points.map((point)=>{
+          client.sendEvent({
+            type:'DRAW',
+            data: point
+          })
+        })
         
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
@@ -191,13 +214,8 @@ wss.on('connection', function connection(client) {
               }
             })
           })
-          const newMessage = new MessageModel({sender,body, correct: true})
+          const newMessage = new MessageModel({roomNumber:client.roomNumber,sender,body, correct: true})
           newMessage.save();
-          if(!Messages[client.roomNumber]){
-            Messages[client.roomNumber] = [{sender,body, correct: true}]
-          }else{
-            Messages[client.roomNumber].push({sender,body, correct: true})
-          }
         }else{
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
@@ -209,18 +227,29 @@ wss.on('connection', function connection(client) {
               }
             })
           })
-          const newMessage = new MessageModel({sender,body, correct: false})
+          const newMessage = new MessageModel({roomNumber:client.roomNumber,sender,body, correct: false})
           newMessage.save();
-          if(!Messages[client.roomNumber]){
-            Messages[client.roomNumber] = [{sender,body, correct: false}]
-          }else{
-            Messages[client.roomNumber].push({sender,body, correct: false})
-          }
         }
         break;
       }
       case "DRAW":{
+        const {data:{x,y,color}} = message;
+        const newpoint = new PointModel({roomNumber:client.roomNumber,x,y,color});
+        newpoint.save();
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.send({
+            type:'DRAW',
+            data:{
+              x,
+              y,
+              color
+            }
+          })
+        })
         break;
+      }
+      case "NEEDANSWER":{
+        
       }
     }
     // disconnected
