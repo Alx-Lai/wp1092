@@ -57,7 +57,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 let Rooms = {};
 const clientRooms = {};
+let Answers = {};
 let RoomCount = 0
+let Messages = {}
+let Rounds = {}
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -113,6 +116,7 @@ wss.on('connection', function connection(client) {
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
         if(clientRooms[client.roomNumber].size === 3){
+          Rounds[client.roomNumber] = 0;
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
@@ -140,12 +144,54 @@ wss.on('connection', function connection(client) {
       }
       case "GETPROBLEM":{
         console.log(message);
-        const ans = await ProblemModel.find({});
-        const anss = ans.map(n=>n.answer);
+        if(Answers[client.roomNumber]){
+          client.sendEvent({type: 'GETPROBLEM',data:{answers: Answers[client.roomNumber]}})
+          break;
+        }
+        const problem = await ProblemModel.find({});
+        const answers = problem.map(n=>n.answer);
+        let arr = [];
+        let len = answers.length;
+        let anss = []
+        for(var i=0;i<10;i++){
+          let tmp = Math.random()*len
+          while(arr.includes(tmp)){
+            tmp = Math.random()*len;
+          }
+          arr.push(tmp);
+        }
+        for(var i=0;i<10;i++){
+          anss.push(answers[arr[i]])
+        }
+        Answers[client.roomNumber] = anss;
         client.sendEvent({type: 'GETPROBLEM',data:{answers: anss}})
         break;
       }
       case "GUESS":{
+        const {data:{sender, body}} = message;
+        if(body === Answer[client.roomNumber][Rounds[client.roomNumber]]){
+          clientRooms[client.roomNumber].forEach((client)=>{
+            client.sendEvent({
+              type: 'MESSAGE',
+              data:{
+                body: `${sender} guessed!`
+              }
+            })
+          })
+        }else{
+          clientRooms[client.roomNumber].forEach((client)=>{
+            client.sendEvent({
+              type: 'MESSAGE',
+              data:{
+                sender,
+                body
+              }
+            })
+          })
+        }
+        break;
+      }
+      case "DRAW":{
         break;
       }
     }
