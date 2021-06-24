@@ -174,7 +174,9 @@ wss.on('connection', function connection(client) {
             client.sendEvent({
               type: 'MESSAGE',
               data:{
-                body: `${sender} guessed!`
+                sender,
+                body: `${sender} guessed!`,
+                correct: true
               }
             })
           })
@@ -184,7 +186,8 @@ wss.on('connection', function connection(client) {
               type: 'MESSAGE',
               data:{
                 sender,
-                body
+                body,
+                correct: false
               }
             })
           })
