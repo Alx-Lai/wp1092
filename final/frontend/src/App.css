@@ -94,6 +94,7 @@
 
 .Chat{
   flex:1;
+  /* height: 300px; */
   background-color: azure;
   margin: 10px;
   border-radius: 10px;
@@ -127,7 +128,7 @@
 .Chat-messages{
   margin: 5px;
   border-radius: 5px;
-  height: 120px;
+  height: 140px;
   /* background-color: rgb(233, 233, 233); */
   border-width: 1px;
   border-style: solid;
@@ -168,8 +169,14 @@ img:hover{
   border-radius: 5px;
 }
 
-/* #wait-modal{
-  position: absolute;
-  left: 50%;
-  top: 50%;
-} */
+.correctFont{
+  color: #52c41a;
+  text-align: left;
+  margin-left: 10px;
+}
+
+.guessFont{
+  text-align: left;
+  margin-left: 10px;
+  margin-bottom: 0px;
+}
