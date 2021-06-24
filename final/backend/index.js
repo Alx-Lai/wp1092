@@ -140,6 +140,31 @@ wss.on('connection', function connection(client) {
         if(clientRooms[client.roomNumber].size === 3){
           Rounds[client.roomNumber] = 0;
           let count = 0;
+          
+          //get problems
+          const problem = await ProblemModel.find({});
+          const answers = problem.map(n=>n.answer);
+          console.log(answers)
+          let arr = [];
+          let len = answers.length;
+          let anss = []
+          if(len > 10){
+            for(var i=0;i<10;i++){
+              let tmp = Math.floor(Math.random()*len);
+              while(arr.includes(tmp)){
+                tmp = Math.floor(Math.random()*len);
+              }
+              arr.push(tmp);
+            }
+          }else{
+            throw new Error('Problem not enough');
+          }
+          console.log(arr)
+          for(var i=0;i<10;i++){
+            anss.push(answers[arr[i]])
+          }
+          Answers[client.roomNumber] = anss;
+          
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
@@ -181,9 +206,9 @@ wss.on('connection', function connection(client) {
         let len = answers.length;
         let anss = []
         for(var i=0;i<10;i++){
-          let tmp = Math.random()*len
+          let tmp = Math.floor(Math.random()*len)
           while(arr.includes(tmp)){
-            tmp = Math.random()*len;
+            tmp = Math.floor(Math.random()*len);
           }
           arr.push(tmp);
         }
@@ -253,7 +278,8 @@ wss.on('connection', function connection(client) {
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
         let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
-        let answer = Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+        console.log(Answers[client.roomNumber]);
+        let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === Rounds[client.roomNumber]){
             client.sendEvent({
