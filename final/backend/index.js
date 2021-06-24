@@ -6,6 +6,7 @@ const path = require('path');
 const uuid = require('uuid');
 
 const mongo = require('./mongo');
+const { finished } = require('stream');
 
 const app = express();
 
@@ -123,13 +124,35 @@ wss.on('connection', function connection(client) {
 
         break;
       }
+      case "ADDPROBLEM":{
+        console.log(message);
+        const {data:{answer}} = message;
+        const newP = await ProblemModel.findOne({answer})
+        console.log(newP);
+        if(newP){client.sendEvent({type: 'ADDPROBLEM',data:{answer:""}})
+        }else {
+          console.log("new problem");
+          const newProblem = new ProblemModel({answer: answer});
+          newProblem.save();
+          client.sendEvent({type: 'ADDPROBLEM',data:{answer: answer}})
+        }
+        break;
+      }
+      case "GETPROBLEM":{
+        console.log(message);
+        const ans = await ProblemModel.find({});
+        const anss = ans.map(n=>n.answer);
+        client.sendEvent({type: 'GETPROBLEM',data:{answers: anss}})
+        break;
+      }
       case "GUESS":{
         break;
       }
     }
     // disconnected
     client.once('close', () => {
-      clientRooms[client.roomNumber].delete(client);
+      if(client.roomNumber !== undefined){
+        clientRooms[client.roomNumber].delete(client);
       Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
         return user._id !== client.userid
       })
@@ -142,7 +165,7 @@ wss.on('connection', function connection(client) {
           }
         })
       })
-    });
+    }});
   });
 });
 
