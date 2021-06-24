@@ -19,7 +19,7 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
   name: { type: String, require: true},
   color: {type: String},
-  score: {type: Number},
+  score: {type: Number, default: 0},
 });
 const messageSchema = new Schema({
   roomNumber:{type: Number},
@@ -71,6 +71,7 @@ const clientRooms = {};
 let Answers = {};
 let RoomCount = 0
 let Rounds = {}
+let Correct = {};
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -131,10 +132,11 @@ wss.on('connection', function connection(client) {
         client.sendEvent({
           type: 'MYID',
           data:{
-            id: client._id
+            id: client.userid
           }
         })
-        
+
+
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
         if(clientRooms[client.roomNumber].size === 3){
@@ -165,6 +167,9 @@ wss.on('connection', function connection(client) {
           }
           Answers[client.roomNumber] = anss;
           
+          //init correct poeple
+          Correct[client.roomNumber] = 0;
+
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
@@ -223,13 +228,25 @@ wss.on('connection', function connection(client) {
         const {data:{sender, body}} = message;
         
         if(body === Answer[client.roomNumber][Rounds[client.roomNumber]]){
+          let score = 10 - Correct[client.roomNumber];
+          if(score < 1){
+            score = 1
+          }
+          Rooms[client.roomNumber].users.map((user)=>{
+            if(user._id == client.userid){
+              user.score += score
+            }
+          })
+
+          Correct[client.roomNumber]++;
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type: 'MESSAGE',
               data:{
                 sender,
                 body: `${sender} guessed!`,
-                correct: true
+                correct: true,
+                score 
               }
             })
           })
@@ -242,7 +259,8 @@ wss.on('connection', function connection(client) {
               data:{
                 sender,
                 body,
-                correct: false
+                correct: false,
+                score: 0
               }
             })
           })
@@ -275,6 +293,11 @@ wss.on('connection', function connection(client) {
       // start a round
       case 'START':{
         //start draw for [round]th client
+        
+        //init correct poeple
+        Correct[client.roomNumber] = 0;
+        
+        //assign drawer
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
         let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
@@ -303,9 +326,27 @@ wss.on('connection', function connection(client) {
         console.log(answer)
         break;
       }
+
       case "END":{
+        if((Rounds[client.roomNumber]+1) == 10){
+          let winner = Rooms[client.roomNumber].users[0];
+          for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
+            if(winner.score < Rooms[client.roomNumber].users[i].score){
+              winner = Rooms[client.roomNumber].users[i];
+            }
+          }
+          clientRooms[client.roomNumber].forEach((client)=>{
+            client.sendEvent({
+              type: 'WINNER',
+              data:{
+                winner
+              }
+            })
+          })
+          break;  
+        }
         let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
-        let count = 0;  
+        let count = 0; 
         clientRooms[client.roomNumber].forEach((client)=>{
           client.sendEvent({
             type: 'START',
@@ -333,12 +374,11 @@ wss.on('connection', function connection(client) {
       Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
         return user._id !== client.userid
       })
-      let id = client.userid
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
           type: 'LEAVE',
           data:{
-            id: id
+            id: client.userid
           }
         })
       })
