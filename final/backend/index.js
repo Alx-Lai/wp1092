@@ -156,7 +156,6 @@ wss.on('connection', function connection(client) {
               data:{}
             })
           })
-          console.log('start')
         }
 
         break;
@@ -248,8 +247,47 @@ wss.on('connection', function connection(client) {
         })
         break;
       }
-      case "NEEDANSWER":{
-        
+      // start a round
+      case 'START':{
+
+        //start draw for [round]th client
+        let count = 0;
+        let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+        let answer = Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+        clientRooms[client.roomNumber].forEach((client)=>{
+          if(count === Rounds[client.roomNumber]){
+            client.sendEvent({
+              type:'STARTDRAW',
+              data:{
+                answer
+              }
+            })
+          }else{
+            client.sendEvent({
+              type:'STARTGUESS',
+              data:{
+                drawer
+              }
+            })
+          }
+          count++;
+        })
+        console.log('start  Round:' + Rounds[client.roomNumber])
+        console.log('answer:')
+        console.log(answer)
+        break;
+      }
+      case "END":{
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.sendEvent({
+            type: 'ANSWER',
+            data:{
+              answer:Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+            }
+          })
+        })
+        Rounds[client.roomNumber]++;
+        break;
       }
     }
     // disconnected
