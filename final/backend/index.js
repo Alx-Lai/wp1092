@@ -286,6 +286,9 @@ wss.on('connection', function connection(client) {
             }
           })
         })
+        //delete old message
+        MessageModel.deleteMany({roomNumber:client.roomNumber})
+        PointModel.deleteMany({roomNumber:client.roomNumber})
         Rounds[client.roomNumber]++;
         break;
       }
