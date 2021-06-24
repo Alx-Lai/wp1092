@@ -40,7 +40,8 @@ const pointSchema = new Schema({
   roomNumber:{type:Number},
   x: {type:Number, require:true},
   y: {type:Number, require:true},
-  color: {type:String, require:true},
+  color: {type:String},
+  type : {type:String}
 })
 
 
@@ -116,10 +117,15 @@ wss.on('connection', function connection(client) {
         if(!Rooms[client.roomNumber].users){
           Rooms[client.roomNumber].users = []
         }
+        const messages = await MessageModel.find({roomNumber:client.roomNumber})
+        const points = await PointModel.find({roomNumber:client.roomNumber})
+        
         client.sendEvent({
           type: 'JOINALL',
           data:{
-            userList: Rooms[client.roomNumber].users
+            userList: Rooms[client.roomNumber].users,
+            messages,
+            points
           }
         })
         client.sendEvent({
@@ -127,23 +133,6 @@ wss.on('connection', function connection(client) {
           data:{
             id: client._id
           }
-        })
-        //load previous message
-        const messages = MessageModel.find({roomNumber:client.roomNumber})
-        messages.map((msg)=>{
-          client.sendEvent({
-            type:'MESSAGE',
-            data: msg
-          })
-        })
-
-        //load previous picture
-        const points = PointModel.find({roomNumber:client.roomNumber})
-        points.map((point)=>{
-          client.sendEvent({
-            type:'DRAW',
-            data: point
-          })
         })
         
         Rooms[client.roomNumber].users.push(newUser);
@@ -155,7 +144,7 @@ wss.on('connection', function connection(client) {
             client.sendEvent({
               type:'START',
               data:{
-                isdraw:`${count==0}`,
+                isdraw: count==0,
                 answer:null,
                 isround0 : true
               }
@@ -238,16 +227,21 @@ wss.on('connection', function connection(client) {
         break;
       }
       case "DRAW":{
-        const {data:{x,y,color}} = message;
-        const newpoint = new PointModel({roomNumber:client.roomNumber,x,y,color});
-        newpoint.save();
+        const {data:{x,y,color,type}} = message;
+        if(type == 'clean'){
+          PointModel.deleteMany({roomNumber:client.roomNumber})
+        }else{
+          const newpoint = new PointModel({roomNumber:client.roomNumber,x,y,color,type});
+          newpoint.save();
+        }
         clientRooms[client.roomNumber].forEach((client)=>{
           client.send({
             type:'DRAW',
             data:{
               x,
               y,
-              color
+              color,
+              type
             }
           })
         })
@@ -290,7 +284,7 @@ wss.on('connection', function connection(client) {
           client.sendEvent({
             type: 'START',
             data:{
-              isdraw:`${count==drawerNum}`,
+              isdraw: count==drawerNum,
               answer:Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]],
               isround0 : false
             }
