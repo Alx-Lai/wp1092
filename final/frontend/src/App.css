@@ -10,7 +10,7 @@
   flex-wrap: nowrap;
   justify-content: space-between;
   width: 1010px;
-  height: 621px;
+  height: 622px;
   margin:auto;
   margin-top: 60px;
 }
@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  height: 657px;
+  height: 647px;
   /* align-items: stretch; */
 }
 
@@ -92,6 +92,14 @@
   border-radius: 10px;
 }
 
+.Display{
+  background-color:azure;
+  flex:2;
+  margin: 10px;
+  border-radius: 10px;
+  padding-top:140px;
+}
+
 .Chat{
   flex:1;
   /* height: 300px; */
@@ -99,7 +107,7 @@
   margin: 10px;
   border-radius: 10px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .LogIn-view{
@@ -159,9 +167,12 @@ img:hover{
   border-radius: 5px;
   width: 220px;
   height: 50px;
-  margin: 15px;
+  position:absolute;
+  left: 390px;
+  top:400px;
   display: flex;
   flex-direction: row;
+  z-index: 10;
 }
 
 #searchBar{
@@ -182,5 +193,35 @@ img:hover{
 }
 
 .progress{
-  width: 500px;
+  margin: 20px;
+}
+
+.chatleft{
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chatright{
+  margin-left: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 220px;
+}
+
+.displayTitle{
+  font-size: 30px;
+  text-align: center;
+  padding-bottom: 20px;
+  font-family: ComicSansMS;
+}
+.displayText{
+  font-size: 15px;
+  text-align: center;
+  padding-bottom: 20px; 
+}
+
+.word{
+  margin-top: 5px;
+  font-size: 30px;
 }

@@ -21,12 +21,17 @@ const useGame = () =>{
     };
 
     const confirmRoundStart = () => {
-        console.log("send comfirm");
         const data = {type: "START", data:{}};
         sendData(data); 
     };
 
-    return {joinRoom, status, confirmRoundStart};
+    const endRound = () => {
+        console.log("send end");
+        const data = {type: "END", data:{}};
+        sendData(data); 
+    };
+
+    return {joinRoom, status, confirmRoundStart, endRound};
 }
 
 export default useGame;

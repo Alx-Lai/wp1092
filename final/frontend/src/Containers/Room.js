@@ -9,41 +9,64 @@ import {CheckCircleTwoTone} from '@ant-design/icons';
 const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
-    const {status, confirmRoundStart} = useGame();
+    const {status, confirmRoundStart, endRound} = useGame();
     const [gamestart, setgamestart] = useState(false);
-    const [displayText, setdisplayText] = useState("gartic");
+    const [displayTitle, setdisplayTitle] = useState("Gartic");
+    const [displayText, setdisplayText] = useState("made by Alex and Leyun");
     const [isdrawing, setisdrawing] = useState(false);
+    const [isdrawer, setisdrawer] = useState(false);
     const [canGuess, setcanGuess] = useState(false);
     const [roundTime, setroundTime] = useState(100);
-    const [round, setround] = useState(0);
-    const [roundStart, setroundStart] = useState(0);
     const [messages, setmessages] = useState([{sender:{name: "alex"}, body:"apple", correct:false},{sender:{name: "alex"}, body:"apple", correct:false}, {sender:{name: "alex", _id:""}, body:"alex guessed!", correct:true}]);
-    
+    const [drawing, setdrawing] = useState(false);
+    const [word, setword] = useState("none");
     const beforeRoundStart=(data)=>{
-      console.log("hello");
       // setisdrawing(data.isdraw);
-      if(data.isdraw==true){
+      if(data.isround0){
+        setdisplayTitle("Game is about to start!");
+        setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"}`)
+      }else{
+        setdisplayTitle(`The answer of last round is ${data.answer}!`);
+        setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"} in next round.`)
+      }
+      if(data.isdraw){
+        setisdrawer(true);
         let timer = setTimeout(() => {
-          console.log("confirm!");
           confirmRoundStart();
-        }, 5000);
-        // confirmRoundStart();
+        }, 6000);
         return () => {
           clearTimeout(timer);
         };
         
+      }else{
+        setisdrawer(false);
       }
     }
-    
+
+
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
+        setroundTime(0);
         beforeRoundStart(status.data);
         console.log(status.data);
         setgamestart(true);
+        setcanGuess(false);
+        setdrawing(false);
       }
       if(status.type == "ROUNDSTART"){ 
         // setroundStart(performance.now());
         console.log("round start")
+        if(isdrawer){
+          setisdrawing(true);
+          setdrawing(true);
+        // confirmRoundStart();
+        return () => {
+        }
+      }else{
+          setcanGuess(true);
+          setdrawing(true);
+        }
+        setroundTime(100);
       }
       if(status.type == "MYID"){
         me._id = status.data.id;
@@ -70,14 +93,38 @@ const Room = ({me, info, displayStatus})=>{
 
     useEffect(() => setusernum(users.length), [users])
     
+
+    useEffect(() => {
+      console.log(roundTime);
+      if(roundTime>0){
+        let timer = setTimeout(() => {
+          console.log("t")
+          setroundTime(roundTime-1)
+        }, 250);
+        return(()=>clearTimeout(timer))
+      }else if(isdrawer){
+        setisdrawing(false);
+        endRound()
+      }
+      
+
+    }, [roundTime])
+
     return(
 
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
-          {(isdrawing)? <Canvas />: <div className="Canvas"><Progress percent={roundTime} showInfo={false} trailColor="#589439" className="progress" /></div>}
+          {(isdrawing)? <Canvas />: <div className="Display">{(!drawing)? 
+          <>
+          <span className="displayTitle">{displayTitle}</span>
+          <p className="displayText">{displayText}</p>
+          </>: <></>
+          }
+          </div>}
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
+            <div className="chatleft">
             <div className="Chat-messages">{messages.map(n=>(
               (n.correct)? <>
                 {/* <CheckCircleTwoTone twoToneColor="#52c41a" /> */}
@@ -86,6 +133,8 @@ const Room = ({me, info, displayStatus})=>{
               :<p className="guessFont">{n.sender.name}: {n.body}</p>
         ))}</div>
             <Input.Search id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess}></Input.Search>
+            </div>
+            <div className="chatright">{(drawing)? ((isdrawer)? <><p>You word is:</p><p className="word">{word}</p></>: <Progress type="circle" percent={roundTime} showInfo={false} className="progress" />):<></>}</div>
           </div>
         </div>
       </div>
