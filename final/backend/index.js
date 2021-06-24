@@ -24,6 +24,7 @@ const userSchema = new Schema({
 const messageSchema = new Schema({
   sender: {type: mongoose.Types.ObjectId, ref: 'User'},
   body: {type: String, require: true},
+  correct: {type: Boolean}
 })
 const problemSchema = new Schema({
   answer: {type: String, require: true},
@@ -113,6 +114,15 @@ wss.on('connection', function connection(client) {
             userList: Rooms[client.roomNumber].users
           }
         })
+        if(Messages[client.roomNumber]){
+          Messages[client.roomNumber].map((msg)=>{
+            client.sendEvent({
+              type:'MESSAGE',
+              data: msg
+            })
+          })
+        }
+        
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
         if(clientRooms[client.roomNumber].size === 3){
@@ -169,6 +179,7 @@ wss.on('connection', function connection(client) {
       }
       case "GUESS":{
         const {data:{sender, body}} = message;
+        
         if(body === Answer[client.roomNumber][Rounds[client.roomNumber]]){
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
@@ -180,6 +191,13 @@ wss.on('connection', function connection(client) {
               }
             })
           })
+          const newMessage = new MessageModel({sender,body, correct: true})
+          newMessage.save();
+          if(!Messages[client.roomNumber]){
+            Messages[client.roomNumber] = [{sender,body, correct: true}]
+          }else{
+            Messages[client.roomNumber].push({sender,body, correct: true})
+          }
         }else{
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
@@ -191,6 +209,13 @@ wss.on('connection', function connection(client) {
               }
             })
           })
+          const newMessage = new MessageModel({sender,body, correct: false})
+          newMessage.save();
+          if(!Messages[client.roomNumber]){
+            Messages[client.roomNumber] = [{sender,body, correct: false}]
+          }else{
+            Messages[client.roomNumber].push({sender,body, correct: false})
+          }
         }
         break;
       }
