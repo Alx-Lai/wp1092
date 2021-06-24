@@ -150,11 +150,17 @@ wss.on('connection', function connection(client) {
         clientRooms[client.roomNumber].add(client);
         if(clientRooms[client.roomNumber].size === 3){
           Rounds[client.roomNumber] = 0;
+          let count = 0;
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
-              data:{}
+              data:{
+                isdraw:`${count==0}`,
+                answer:null,
+                isround0 : true
+              }
             })
+            count++;
           })
         }
 
@@ -249,22 +255,22 @@ wss.on('connection', function connection(client) {
       }
       // start a round
       case 'START':{
-
         //start draw for [round]th client
         let count = 0;
-        let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+        let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
+        let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
         let answer = Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === Rounds[client.roomNumber]){
             client.sendEvent({
-              type:'STARTDRAW',
+              type:'ROUNDSTART',
               data:{
                 answer
               }
             })
           }else{
             client.sendEvent({
-              type:'STARTGUESS',
+              type:'ROUNDSTART',
               data:{
                 drawer
               }
@@ -279,17 +285,24 @@ wss.on('connection', function connection(client) {
       }
       case "END":{
         clientRooms[client.roomNumber].forEach((client)=>{
+          let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+          let count = 0;
           client.sendEvent({
-            type: 'ANSWER',
+            type: 'START',
             data:{
-              answer:Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]]
+              isdraw:`${count==drawerNum}`,
+              answer:Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]],
+              isround0 : false
             }
           })
+          count++;
         })
         //delete old message
-        MessageModel.deleteMany({roomNumber:client.roomNumber})
-        PointModel.deleteMany({roomNumber:client.roomNumber})
+        await MessageModel.deleteMany({roomNumber:client.roomNumber})
+        await PointModel.deleteMany({roomNumber:client.roomNumber})
+
         Rounds[client.roomNumber]++;
+        
         break;
       }
     }
