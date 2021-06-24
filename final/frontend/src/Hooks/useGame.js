@@ -20,7 +20,13 @@ const useGame = () =>{
         
     };
 
-    return {joinRoom, status};
+    const confirmRoundStart = () => {
+        console.log("send comfirm");
+        const data = {type: "START", data:{}};
+        sendData(data); 
+    };
+
+    return {joinRoom, status, confirmRoundStart};
 }
 
 export default useGame;

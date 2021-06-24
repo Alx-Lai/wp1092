@@ -180,3 +180,7 @@ img:hover{
   margin-left: 10px;
   margin-bottom: 0px;
 }
+
+.progress{
+  width: 500px;
+}
