@@ -304,14 +304,14 @@ wss.on('connection', function connection(client) {
         break;
       }
       case "END":{
+        let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+        let count = 0;  
         clientRooms[client.roomNumber].forEach((client)=>{
-          let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
-          let count = 0;
           client.sendEvent({
             type: 'START',
             data:{
               isdraw: count==drawerNum,
-              answer:Answers[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[Rounds[client.roomNumber]]],
+              answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
               isround0 : false
             }
           })
