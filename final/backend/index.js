@@ -73,7 +73,7 @@ let RoomCount = 0
 let Rounds = {}
 let Correct = {};
 let Time = {};
-const MAXTIME = 20
+const MAXTIME = 10
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -302,11 +302,12 @@ wss.on('connection', function connection(client) {
         //assign drawer
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
+        console.log(drawerNum);
         let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
         console.log(Answers[client.roomNumber]);
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
-          if(count === Rounds[client.roomNumber]){
+          if(count === drawerNum){
             client.sendEvent({
               type:'ROUNDSTART',
               data:{
@@ -357,29 +358,29 @@ wss.on('connection', function connection(client) {
                   }
                 })
               })
-              // break;  
-            }
-            let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
-            let count = 0; 
-            clientRooms[client.roomNumber].forEach((client)=>{
-              client.sendEvent({
-                type: 'START',
-                data:{
-                  isdraw: count==drawerNum,
-                  answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
-                  isround0 : false
-                }
+              //break;  
+            }else{
+              let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+              let count = 0; 
+              clientRooms[client.roomNumber].forEach((client)=>{
+                client.sendEvent({
+                  type: 'START',
+                  data:{
+                    isdraw: count==drawerNum,
+                    answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
+                    isround0 : false
+                  }
+                })
+                count++;
               })
-              count++;
-            })
-            //delete old message
-            await MessageModel.deleteMany({roomNumber:client.roomNumber})
-            await PointModel.deleteMany({roomNumber:client.roomNumber})
-
-            Rounds[client.roomNumber]++;
+              //delete old message
+              await MessageModel.deleteMany({roomNumber:client.roomNumber})
+              await PointModel.deleteMany({roomNumber:client.roomNumber})
+              Rounds[client.roomNumber]++;
+            }
             /************* *end* **************/
           }
-        },250);
+        },1000);
         console.log('start  Round:' + Rounds[client.roomNumber])
         console.log('answer:')
         console.log(answer)
