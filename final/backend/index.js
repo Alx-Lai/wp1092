@@ -326,7 +326,7 @@ wss.on('connection', function connection(client) {
         //set time
         Time[client.roomNumber] = 100;
         
-        let countdown = setInterval(()=>{
+        let countdown = setInterval(async()=>{
           if(Time[client.roomNumber] > 0){
             Time[client.roomNumber]--;
             clientRooms[client.roomNumber].forEach((client)=>{
@@ -356,7 +356,7 @@ wss.on('connection', function connection(client) {
                   }
                 })
               })
-              break;  
+              // break;  
             }
             let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
             let count = 0; 

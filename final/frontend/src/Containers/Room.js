@@ -65,7 +65,6 @@ const Room = ({me, info, displayStatus})=>{
           setcanGuess(true);
           setdrawing(true);
         }
-        setroundTime(100);
       }
       if(status.type == "MYID"){
         me._id = status.data.id;
@@ -79,6 +78,10 @@ const Room = ({me, info, displayStatus})=>{
       if(status.type == "DRAW"){
         //TODO
       }
+      if(status.type == "TIME"){
+        setroundTime(status.data.time);
+        if (roundTime==0) setisdrawing(false);
+      }
     }, [status])
 
     useEffect(() => {
@@ -91,23 +94,6 @@ const Room = ({me, info, displayStatus})=>{
     }, [info])
 
     useEffect(() => setusernum(users.length), [users])
-    
-
-    useEffect(() => {
-      console.log(roundTime);
-      if(roundTime>0){
-        let timer = setTimeout(() => {
-          console.log("t")
-          setroundTime(roundTime-1)
-        }, 250);
-        return(()=>clearTimeout(timer))
-      }else if(isdrawer){
-        setisdrawing(false);
-        endRound()
-      }
-      
-
-    }, [roundTime])
 
     return(
 
