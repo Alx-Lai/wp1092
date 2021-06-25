@@ -328,6 +328,7 @@ wss.on('connection', function connection(client) {
       }
 
       case "END":{
+        console.log('Round '+Rounds[client.roomNumber]+' end')
         if((Rounds[client.roomNumber]+1) == 10){
           let winner = Rooms[client.roomNumber].users[0];
           for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
