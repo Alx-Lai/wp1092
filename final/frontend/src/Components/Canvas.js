@@ -71,7 +71,7 @@ const Canvas = ({sendDraw}) => {
             onMouseMove={handleMouseMove}
             ref={canvasRef}
         />
-        <Toolbar setMode={setMode} contextRef={contextRef} canvasRef={canvasRef} handleChange={handleChange} mode={mode}/>
+        <Toolbar setMode={setMode} contextRef={contextRef} canvasRef={canvasRef} handleChange={handleChange} mode={mode} sendDraw={sendDraw}/>
         </div>
     )
 }

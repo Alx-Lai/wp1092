@@ -46,6 +46,10 @@ const CanvasView = ({data}) => {
                 setColor(color)
                 break;
             }
+            case 'clean':{
+                contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
+                break;
+            }
         }
     },[data])
     useEffect(()=>{
