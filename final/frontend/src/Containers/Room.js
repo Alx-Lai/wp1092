@@ -1,6 +1,6 @@
 import '../App.css';
 import Canvas from '../Components/Canvas';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import UserList from '../Components/UserList';
 import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
@@ -21,6 +21,12 @@ const Room = ({me, info, displayStatus})=>{
     const [drawing, setdrawing] = useState(false);
     const [word, setword] = useState("none");
     const [guessinput, setguessinput] = useState("");
+    const messagesEndRef = useRef(null);
+
+    const scrollToBottom = async () => {
+      await messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
+  };
+
     const beforeRoundStart=(data)=>{
       // setisdrawing(data.isdraw);
       if(data.isround0){
@@ -105,7 +111,9 @@ const Room = ({me, info, displayStatus})=>{
     }, [info])
 
     useEffect(() => setusernum(users.length), [users])
-
+    useEffect(() => {
+      scrollToBottom();
+    }, [messages])
     return(
 
         <div className="PlayScreen">
@@ -121,13 +129,22 @@ const Room = ({me, info, displayStatus})=>{
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
             <div className="chatleft">
-            <div className="Chat-messages">{messages.map(n=>(
+            <div className="Chat-messages">{messages.map((n,i)=>(
+              (i!=messages.length-1)?(
               (n.correct)? 
               <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
-              :<p className="guessFont">{n.sender.name}: {n.body}</p>
+              :<p className="guessFont">{n.sender.name}: {n.body}</p>):(
+                (n.correct)? 
+              <p className="correctFont" ref={messagesEndRef} >{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
+              :<p className="guessFont" ref={messagesEndRef} >{n.sender.name}: {n.body}</p>
+              )
         ))}</div>
             <Input.Search onChange={(e) => 
-          setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{guessWord(e, me._id);setguessinput("")}}></Input.Search>
+          setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{
+            if(guessinput=="") displayStatus({type:"error", msg:"guess can't not be blank"});
+            else{guessWord(e, me._id);
+            setguessinput("")}}
+            }></Input.Search>
             </div>
             <div className="chatright">{(drawing)? ((isdrawer)? <><p>You word is:</p><p className="word">{word}</p></>: <Progress type="circle" percent={roundTime} showInfo={false} className="progress" />):<></>}</div>
           </div>
