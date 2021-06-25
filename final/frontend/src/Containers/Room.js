@@ -9,7 +9,7 @@ import {CheckCircleTwoTone} from '@ant-design/icons';
 const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
-    const {status, confirmRoundStart, endRound} = useGame();
+    const {status, confirmRoundStart, guessWord} = useGame();
     const [gamestart, setgamestart] = useState(false);
     const [displayTitle, setdisplayTitle] = useState("Gartic");
     const [displayText, setdisplayText] = useState("made by Alex and Leyun");
@@ -17,9 +17,10 @@ const Room = ({me, info, displayStatus})=>{
     const [isdrawer, setisdrawer] = useState(false);
     const [canGuess, setcanGuess] = useState(false);
     const [roundTime, setroundTime] = useState(100);
-    const [messages, setmessages] = useState([{sender:{name: "alex"}, body:"apple", correct:false},{sender:{name: "alex"}, body:"apple", correct:false}, {sender:{name: "alex", _id:""}, body:"alex guessed!", correct:true}]);
+    const [messages, setmessages] = useState([]);
     const [drawing, setdrawing] = useState(false);
     const [word, setword] = useState("none");
+    const [guessinput, setguessinput] = useState("");
     const beforeRoundStart=(data)=>{
       // setisdrawing(data.isdraw);
       if(data.isround0){
@@ -47,14 +48,12 @@ const Room = ({me, info, displayStatus})=>{
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
         beforeRoundStart(status.data);
-        console.log(status.data);
         setgamestart(true);
         setcanGuess(false);
         setdrawing(false);
       }
       if(status.type == "ROUNDSTART"){ 
         // setroundStart(performance.now());
-        console.log("round start")
         if(isdrawer){
           setword(status.data.answer);
           setisdrawing(true);
@@ -82,6 +81,17 @@ const Room = ({me, info, displayStatus})=>{
       if(status.type == "TIME"){
         setroundTime(status.data.time);
         if (status.data.time==0&&isdrawer) {setisdrawing(false)}
+      }
+    if(status.type == "MESSAGE"){
+        setusers(users.map((n=>{
+          let a = n;
+          if(a._id==status.data.sender) a.score+=status.data.score;
+          return a;
+        })))
+        let m = status.data;
+        let sender = users.find(n=>n._id==m.sender);
+        m.sender=sender;
+        setmessages([...messages, m])
       }
     }, [status])
 
@@ -112,13 +122,12 @@ const Room = ({me, info, displayStatus})=>{
           <div className = "Chat">
             <div className="chatleft">
             <div className="Chat-messages">{messages.map(n=>(
-              (n.correct)? <>
-                {/* <CheckCircleTwoTone twoToneColor="#52c41a" /> */}
-                <p className="correctFont">{(n.sender._id==me._id)?'You guessed!':n.body}</p>
-              </>
+              (n.correct)? 
+              <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
               :<p className="guessFont">{n.sender.name}: {n.body}</p>
         ))}</div>
-            <Input.Search id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess}></Input.Search>
+            <Input.Search onChange={(e) => 
+          setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{guessWord(e, me._id);setguessinput("")}}></Input.Search>
             </div>
             <div className="chatright">{(drawing)? ((isdrawer)? <><p>You word is:</p><p className="word">{word}</p></>: <Progress type="circle" percent={roundTime} showInfo={false} className="progress" />):<></>}</div>
           </div>

@@ -8,7 +8,7 @@ const useGame = () =>{
         let {data} = message;
         data = JSON.parse(data);
         setStatus(data);
-        console.log(data);
+        // console.log(data);
     }
 
     const sendData = async (data)=>{
@@ -25,13 +25,12 @@ const useGame = () =>{
         sendData(data); 
     };
 
-    const endRound = () => {
-        console.log("send end");
-        const data = {type: "END", data:{}};
+    const guessWord = (word, me) => {
+        const data = {type: "GUESS", data:{sender: me, body: word}};
         sendData(data); 
     };
 
-    return {joinRoom, status, confirmRoundStart, endRound};
+    return {joinRoom, status, confirmRoundStart, guessWord};
 }
 
 export default useGame;
