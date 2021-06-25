@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
 import "../App.css"
-import useGame from '../Hooks/useGame'
 
 const CanvasView = ({data}) => {
     const canvasRef = useRef(null)

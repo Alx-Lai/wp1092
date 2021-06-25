@@ -34,7 +34,7 @@ const useGame = () =>{
         sendData(data)
     }
 
-    return {joinRoom, status, confirmRoundStart, guessWord};
+    return {joinRoom, status, confirmRoundStart,sendDraw, guessWord};
 }
 
 export default useGame;

@@ -2,12 +2,13 @@ import React, { useRef, useEffect, useState } from 'react'
 import "../App.css"
 import Toolbar from './Toolbar'
 
-const Canvas = () => {
+const Canvas = ({sendDraw}) => {
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
     const [isDrawing, setIsDrawing] = useState(false)
     const [mode, setMode] = useState('pencil')
     const [color, setColor] = useState('black')
+
     const handleMouseMove = (e)=>{
         if(!isDrawing){
             return
@@ -16,27 +17,34 @@ const Canvas = () => {
         const offsetX = canvasRef.current.offsetLeft
         const offsetY = canvasRef.current.offsetTop
         if(mode === 'pencil'){
+            sendDraw({type:'lineTo',x:(pageX-offsetX)/2,y:(pageY-offsetY)/2})
             contextRef.current.lineTo((pageX-offsetX)/2, (pageY-offsetY)/2)
+            sendDraw({type:'stroke'})
             contextRef.current.stroke()
         }else if(mode === 'eraser'){
+            sendDraw({type:'clearRect',x:(pageX-offsetX)/2,y:(pageY-offsetY)/2})
             contextRef.current.clearRect((pageX-offsetX)/2, (pageY-offsetY)/2, 10, 10)
         }
     }
     const handleMouseDown = (e)=>{
         const {pageX, pageY} = e
+        sendDraw({type:'beginPath'})
         contextRef.current.beginPath()
         const offsetX = canvasRef.current.offsetLeft
         const offsetY = canvasRef.current.offsetTop
         if(mode === 'pencil'){
+            sendDraw({type:'lineTo',x:(pageX-offsetX)/2,y:(pageY-offsetY)/2})
             contextRef.current.lineTo((pageX-offsetX)/2, (pageY-offsetY)/2)
         }
         setIsDrawing(true)
     }
     const handleMouseUp = (e)=>{
+        sendDraw({type:'closePath'})
         contextRef.current.closePath()
         setIsDrawing(false)
     }
     const handleChange = (e)=>{
+        sendDraw({type:'color',color:e.target.value})
         setColor(e.target.value)
     }
     useEffect(()=>{

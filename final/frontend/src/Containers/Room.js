@@ -10,7 +10,7 @@ import CanvasView from '../Components/CanvasView';
 const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
-    const {status, confirmRoundStart, guessWord} = useGame();
+    const {status, confirmRoundStart, guessWord, sendDraw} = useGame();
     const [gamestart, setgamestart] = useState(false);
     const [displayTitle, setdisplayTitle] = useState("Gartic");
     const [displayText, setdisplayText] = useState("made by Alex and Leyun");
@@ -132,7 +132,7 @@ const Room = ({me, info, displayStatus})=>{
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
-          {(isdrawing)? <Canvas />: (!drawing)?<div className="Display"> 
+          {(isdrawing)? <Canvas sendDraw={sendDraw}/>: (!drawing)?<div className="Display"> 
           <>
           <span className="displayTitle">{displayTitle}</span>
           <p className="displayText">{displayText}</p>
