@@ -114,6 +114,15 @@ const Room = ({me, info, displayStatus})=>{
       })])
     }, [info])
 
+    useEffect(() => {
+      if(roundTime>=40) {
+        if(progcolor!= "#5dcc26") setprogcolor("#5dcc26")
+
+      }else if(roundTime>=20){
+        if(progcolor!= "#f3d528") setprogcolor("#f3d528")}
+      else if(progcolor!= "#f65228") setprogcolor("#f65228")
+    }, [roundTime])
+
     useEffect(() => setusernum(users.length), [users])
     useEffect(() => {
       scrollToBottom();
