@@ -73,6 +73,7 @@ let RoomCount = 0
 let Rounds = {}
 let Correct = {};
 let Time = {};
+const MAXTIME = 20
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -324,7 +325,7 @@ wss.on('connection', function connection(client) {
         })
         
         //set time
-        Time[client.roomNumber] = 100;
+        Time[client.roomNumber] = MAXTIME;
         
         let countdown = setInterval(async()=>{
           if(Time[client.roomNumber] > 0){
