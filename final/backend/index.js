@@ -36,20 +36,12 @@ const roomSchema = new Schema({
   problems : [{type: mongoose.Types.ObjectId, ref: 'Problem'}],
   round: {type: Number},
 })
-const pointSchema = new Schema({
-  roomNumber:{type:Number},
-  x: {type:Number, require:true},
-  y: {type:Number, require:true},
-  color: {type:String},
-  type : {type:String}
-})
 
 
 const UserModel = mongoose.model('User', userSchema);
 const MessageModel = mongoose.model('Message', messageSchema);
 const ProblemModel = mongoose.model('Problem', problemSchema);
 const RoomModel = mongoose.model('Room', roomSchema);
-const PointModel = mongoose.model('Point', pointSchema);
 
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
@@ -121,14 +113,12 @@ wss.on('connection', function connection(client) {
           Rooms[client.roomNumber].users = []
         }
         const messages = await MessageModel.find({roomNumber:client.roomNumber})
-        const points = await PointModel.find({roomNumber:client.roomNumber})
         
         client.sendEvent({
           type: 'JOINALL',
           data:{
             userList: Rooms[client.roomNumber].users,
             messages,
-            points
           }
         })
         client.sendEvent({
@@ -273,12 +263,6 @@ wss.on('connection', function connection(client) {
       }
       case "DRAW":{
         const {data:{x,y,color,type}} = message;
-        if(type == 'clean'){
-          PointModel.deleteMany({roomNumber:client.roomNumber})
-        }else{
-          const newpoint = new PointModel({roomNumber:client.roomNumber,x,y,color,type});
-          newpoint.save();
-        }
         clientRooms[client.roomNumber].forEach((client)=>{
           client.send({
             type:'DRAW',
@@ -302,9 +286,7 @@ wss.on('connection', function connection(client) {
         //assign drawer
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
-        console.log(drawerNum);
         let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
-        console.log(Answers[client.roomNumber]);
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === drawerNum){
@@ -375,7 +357,6 @@ wss.on('connection', function connection(client) {
               })
               //delete old message
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
-              await PointModel.deleteMany({roomNumber:client.roomNumber})
               Rounds[client.roomNumber]++;
             }
             /************* *end* **************/

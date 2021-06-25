@@ -6,6 +6,7 @@ import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
 import {CheckCircleTwoTone} from '@ant-design/icons';
+import CanvasView from '../Components/CanvasView';
 const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
@@ -123,7 +124,7 @@ const Room = ({me, info, displayStatus})=>{
           <>
           <span className="displayTitle">{displayTitle}</span>
           <p className="displayText">{displayText}</p>
-          </>: <></>
+          </>: <CanvasView/>
           }
           </div>}
           <Waiting num={usernum} visible={!gamestart} />
