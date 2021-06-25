@@ -65,7 +65,7 @@ let RoomCount = 0
 let Rounds = {}
 let Correct = {};
 let Time = {};
-const MAXTIME = 10
+const MAXTIME = 100
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -361,7 +361,7 @@ wss.on('connection', function connection(client) {
             }
             /************* *end* **************/
           }
-        },1000);
+        },250);
         console.log('start  Round:' + Rounds[client.roomNumber])
         console.log('answer:')
         console.log(answer)

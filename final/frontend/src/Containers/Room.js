@@ -22,7 +22,9 @@ const Room = ({me, info, displayStatus})=>{
     const [drawing, setdrawing] = useState(false);
     const [word, setword] = useState("none");
     const [guessinput, setguessinput] = useState("");
+    const [progcolor, setprogcolor] = useState("#5dcc26");
     const messagesEndRef = useRef(null);
+    const [stroke, setstroke] = useState({});
 
     const scrollToBottom = async () => {
       await messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -83,7 +85,7 @@ const Room = ({me, info, displayStatus})=>{
         setusers(users.filter(n=>n._id !== status.data.id))
       }
       if(status.type == "DRAW"){
-        //TODO
+        setstroke(status.data);
       }
       if(status.type == "TIME"){
         setroundTime(status.data.time);
@@ -100,6 +102,7 @@ const Room = ({me, info, displayStatus})=>{
         m.sender=sender;
         setmessages([...messages, m])
       }
+      
     }, [status])
 
     useEffect(() => {
@@ -120,20 +123,19 @@ const Room = ({me, info, displayStatus})=>{
         <div className="PlayScreen">
         <div className="UserList-view"><UserList users={users}/></div>
         <div className="CanvasAndChat-view">
-          {(isdrawing)? <Canvas />: <div className="Display">{(!drawing)? 
+          {(isdrawing)? <Canvas />: (!drawing)?<div className="Display"> 
           <>
           <span className="displayTitle">{displayTitle}</span>
           <p className="displayText">{displayText}</p>
-          </>: <CanvasView/>
-          }
-          </div>}
+          </>
+          </div>:<CanvasView  data={stroke}/>}
           <Waiting num={usernum} visible={!gamestart} />
           <div className = "Chat">
             <div className="chatleft">
             <div className="Chat-messages">{messages.map((n,i)=>(
               (i!=messages.length-1)?(
               (n.correct)? 
-              <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
+              <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hit the answer!`}</p>
               :<p className="guessFont">{n.sender.name}: {n.body}</p>):(
                 (n.correct)? 
               <p className="correctFont" ref={messagesEndRef} >{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
@@ -147,7 +149,7 @@ const Room = ({me, info, displayStatus})=>{
             setguessinput("")}}
             }></Input.Search>
             </div>
-            <div className="chatright">{(drawing)? ((isdrawer)? <><p>You word is:</p><p className="word">{word}</p></>: <Progress type="circle" percent={roundTime} showInfo={false} className="progress" />):<></>}</div>
+            <div className="chatright">{(drawing)? <Progress strokeColor={progcolor} type="circle" percent={roundTime}  format={()=>word} showInfo={isdrawer} className="progress" />:<></>}</div>
           </div>
         </div>
       </div>

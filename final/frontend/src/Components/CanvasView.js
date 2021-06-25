@@ -2,11 +2,10 @@ import React, { useRef, useEffect, useState } from 'react'
 import "../App.css"
 import useGame from '../Hooks/useGame'
 
-const CanvasView = () => {
+const CanvasView = ({data}) => {
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
     const [color, setColor] = useState('black');
-    const {status} = useGame();
     useEffect(()=>{
         const canvas = canvasRef.current;
         canvas.width = 626.670;
@@ -20,37 +19,36 @@ const CanvasView = () => {
         context.lineWidth = 1;
         contextRef.current = context
     },[])
+
     useEffect(()=>{
-        if(status && status.type =='DRAW'){
-            const {type,x,y,color} = status.data;
-            switch(type){
-                case 'lineTo':{
-                    contextRef.current.lineTo(x, y)
-                    break;
-                }
-                case 'stroke':{
-                    contextRef.current.stroke()
-                    break;
-                }
-                case 'clearRect':{
-                    contextRef.current.clearRect(x, y, 10, 10)
-                    break;
-                }
-                case 'beginPath':{
-                    contextRef.current.beginPath()
-                    break;
-                }
-                case 'closePath':{
-                    contextRef.current.closePath()
-                    break;
-                }
-                case 'color':{
-                    setColor(color)
-                    break;
-                }
+        const {type,x,y,color} = data;
+        switch(type){
+            case 'lineTo':{
+                contextRef.current.lineTo(x, y)
+                break;
+            }
+            case 'stroke':{
+                contextRef.current.stroke()
+                break;
+            }
+            case 'clearRect':{
+                contextRef.current.clearRect(x, y, 10, 10)
+                break;
+            }
+            case 'beginPath':{
+                contextRef.current.beginPath()
+                break;
+            }
+            case 'closePath':{
+                contextRef.current.closePath()
+                break;
+            }
+            case 'color':{
+                setColor(color)
+                break;
             }
         }
-    }, [status])
+    },[data])
     useEffect(()=>{
         contextRef.current.strokeStyle = color
     }, [color])
