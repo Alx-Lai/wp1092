@@ -378,7 +378,7 @@ wss.on('connection', function connection(client) {
             Rounds[client.roomNumber]++;
             /************* *end* **************/
           }
-        },1000);
+        },250);
         console.log('start  Round:' + Rounds[client.roomNumber])
         console.log('answer:')
         console.log(answer)

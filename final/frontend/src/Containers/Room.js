@@ -56,6 +56,7 @@ const Room = ({me, info, displayStatus})=>{
         // setroundStart(performance.now());
         console.log("round start")
         if(isdrawer){
+          setword(status.data.answer);
           setisdrawing(true);
           setdrawing(true);
         // confirmRoundStart();
@@ -80,7 +81,7 @@ const Room = ({me, info, displayStatus})=>{
       }
       if(status.type == "TIME"){
         setroundTime(status.data.time);
-        if (roundTime==0) setisdrawing(false);
+        if (status.data.time==0&&isdrawer) {setisdrawing(false)}
       }
     }, [status])
 
