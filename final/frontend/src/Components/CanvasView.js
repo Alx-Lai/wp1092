@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react'
 import "../App.css"
+import useGame from '../Hooks/useGame'
 
-const CanvasView = ({status}) => {
+const CanvasView = () => {
     const canvasRef = useRef(null)
     const contextRef = useRef(null)
     const [color, setColor] = useState('black');
+    const {status} = useGame();
     useEffect(()=>{
         const canvas = canvasRef.current;
         canvas.width = 626.670;
