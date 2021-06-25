@@ -95,7 +95,7 @@ wss.on('connection', function connection(client) {
         const newUser = new UserModel({name: name, color: color, score: 0});
         newUser.save();
         client.userid = newUser._id;
-        console.log(client.userid)
+        // console.log(client.userid)
         const roomNumber = await validateRoom();
         client.roomNumber = roomNumber
         if(!clientRooms[client.roomNumber]){
@@ -153,7 +153,7 @@ wss.on('connection', function connection(client) {
           }else{
             throw new Error('Problem not enough');
           }
-          console.log(arr)
+          // console.log(arr)
           for(var i=0;i<10;i++){
             anss.push(answers[arr[i]])
           }
@@ -178,13 +178,13 @@ wss.on('connection', function connection(client) {
         break;
       }
       case "ADDPROBLEM":{
-        console.log(message);
+        // console.log(message);
         const {data:{answer}} = message;
         const newP = await ProblemModel.findOne({answer})
-        console.log(newP);
+        // console.log(newP);
         if(newP){client.sendEvent({type: 'ADDPROBLEM',data:{answer:""}})
         }else {
-          console.log("new problem");
+          // console.log("new problem");
           const newProblem = new ProblemModel({answer: answer});
           newProblem.save();
           client.sendEvent({type: 'ADDPROBLEM',data:{answer: answer}})
@@ -192,7 +192,7 @@ wss.on('connection', function connection(client) {
         break;
       }
       case "GETPROBLEM":{
-        console.log(message);
+        // console.log(message);
         if(Answers[client.roomNumber]){
           client.sendEvent({type: 'GETPROBLEM',data:{answers: Answers[client.roomNumber]}})
           break;
@@ -324,7 +324,7 @@ wss.on('connection', function connection(client) {
           }else{
             clearInterval(countdown);
             /************* *end* **************/
-            console.log('Round '+Rounds[client.roomNumber]+' end')
+            // console.log('Round '+Rounds[client.roomNumber]+' end')
             if((Rounds[client.roomNumber]+1) == 10){
               let winner = Rooms[client.roomNumber].users[0];
               for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
@@ -362,9 +362,9 @@ wss.on('connection', function connection(client) {
             /************* *end* **************/
           }
         },250);
-        console.log('start  Round:' + Rounds[client.roomNumber])
-        console.log('answer:')
-        console.log(answer)
+        // console.log('start  Round:' + Rounds[client.roomNumber])
+        // console.log('answer:')
+        // console.log(answer)
         break;
       }
     }
