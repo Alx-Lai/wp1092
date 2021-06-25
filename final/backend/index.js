@@ -229,7 +229,7 @@ wss.on('connection', function connection(client) {
       case "GUESS":{
         const {data:{sender, body}} = message;
         
-        if(body === Answer[client.roomNumber][Rounds[client.roomNumber]]){
+        if(body === Answers[client.roomNumber][Rounds[client.roomNumber]]){
           let score = 10 - Correct[client.roomNumber];
           if(score < 1){
             score = 1
