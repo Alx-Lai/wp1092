@@ -2,6 +2,11 @@
 
 .App {
   text-align: center;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .PlayScreen{
@@ -167,9 +172,9 @@ img:hover{
   border-radius: 5px;
   width: 220px;
   height: 50px;
-  position:absolute;
-  left: 390px;
-  top:400px;
+  position:relative;
+  left: 10px;
+  bottom:10px;
   display: flex;
   flex-direction: row;
   z-index: 10;

@@ -17,7 +17,10 @@ const Begin = ({setStart, setMe, me, setInfo, displayStatus})=>{
     [color])
     useEffect(() => {
         if(status.type == "JOINALL"){ //{type:"JOIN", data:[{name, score, color}]}
-            setInfo(status.data.userList);
+            setInfo(status.data);
+            let newme = me;
+            newme._id = status.data.id;
+            setMe(newme);
             setStart(true)
         }
     }, [status])

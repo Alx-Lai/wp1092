@@ -113,20 +113,21 @@ wss.on('connection', function connection(client) {
           Rooms[client.roomNumber].users = []
         }
         const messages = await MessageModel.find({roomNumber:client.roomNumber})
-        
+        console.log(client.userid);
         client.sendEvent({
           type: 'JOINALL',
           data:{
             userList: Rooms[client.roomNumber].users,
             messages,
-          }
-        })
-        client.sendEvent({
-          type: 'MYID',
-          data:{
             id: client.userid
           }
         })
+        // client.sendEvent({
+        //   type: 'MYID',
+        //   data:{
+        //     id: 
+        //   }
+        // })
 
 
         Rooms[client.roomNumber].users.push(newUser);
@@ -236,7 +237,7 @@ wss.on('connection', function connection(client) {
               type: 'MESSAGE',
               data:{
                 sender,
-                body: `${sender} guessed!`,
+                body: "",
                 correct: true,
                 score 
               }

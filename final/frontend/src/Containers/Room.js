@@ -5,7 +5,6 @@ import UserList from '../Components/UserList';
 import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
-import {CheckCircleTwoTone} from '@ant-design/icons';
 import CanvasView from '../Components/CanvasView';
 const Room = ({me, info, displayStatus})=>{ 
     const [users, setusers] = useState([me]); 
@@ -75,9 +74,9 @@ const Room = ({me, info, displayStatus})=>{
           setdrawing(true);
         }
       }
-      if(status.type == "MYID"){
-        me._id = status.data.id;
-      }
+      // if(status.type == "MYID"){
+      //   me._id = status.data.id;
+      // }
       if(status.type == "JOIN"){ 
         setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color, _id: status.data.userList._id}])
       }
@@ -99,6 +98,7 @@ const Room = ({me, info, displayStatus})=>{
         })))
         let m = status.data;
         let sender = users.find(n=>n._id==m.sender);
+        if(m.sender==me._id&& m.correct) setcanGuess(false) 
         m.sender=sender;
         setmessages([...messages, m])
       }
@@ -107,7 +107,8 @@ const Room = ({me, info, displayStatus})=>{
 
     useEffect(() => {
       console.log(info)
-      setusers([me,...info.map(n=>{
+      setmessages(info.messages)
+      setusers([me,...info.userList.map(n=>{
         let a = n;
         a.me = false;
         return a;
@@ -147,7 +148,7 @@ const Room = ({me, info, displayStatus})=>{
               <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hit the answer!`}</p>
               :<p className="guessFont">{n.sender.name}: {n.body}</p>):(
                 (n.correct)? 
-              <p className="correctFont" ref={messagesEndRef} >{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name}hit the answer!`}</p>
+              <p className="correctFont" ref={messagesEndRef} >{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hit the answer!`}</p>
               :<p className="guessFont" ref={messagesEndRef} >{n.sender.name}: {n.body}</p>
               )
         ))}</div>
@@ -155,7 +156,8 @@ const Room = ({me, info, displayStatus})=>{
           setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{
             if(guessinput=="") displayStatus({type:"error", msg:"guess can't not be blank"});
             else{guessWord(e, me._id);
-            setguessinput("")}}
+            setguessinput("")}
+          }
             }></Input.Search>
             </div>
             <div className="chatright">{(drawing)? <Progress strokeColor={progcolor} type="circle" percent={roundTime}  format={()=>word} showInfo={isdrawer} className="progress" />:<></>}</div>
