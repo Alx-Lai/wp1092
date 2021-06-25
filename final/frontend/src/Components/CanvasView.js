@@ -19,7 +19,7 @@ const CanvasView = ({status}) => {
         contextRef.current = context
     },[])
     useEffect(()=>{
-        if(status.type =='DRAW'){
+        if(status && status.type =='DRAW'){
             const {type,x,y,color} = status.data;
             switch(type){
                 case 'lineTo':{
