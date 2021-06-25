@@ -264,7 +264,7 @@ wss.on('connection', function connection(client) {
       case "DRAW":{
         const {data:{x,y,color,type}} = message;
         clientRooms[client.roomNumber].forEach((client)=>{
-          client.send({
+          client.sendEvent({
             type:'DRAW',
             data:{
               x,

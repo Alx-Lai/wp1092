@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react'
 import "../App.css"
-import useGame from '../Hooks/useGame'
 
 const CanvasView = ({data}) => {
     const canvasRef = useRef(null)
@@ -45,6 +44,10 @@ const CanvasView = ({data}) => {
             }
             case 'color':{
                 setColor(color)
+                break;
+            }
+            case 'clean':{
+                contextRef.current.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height)
                 break;
             }
         }
