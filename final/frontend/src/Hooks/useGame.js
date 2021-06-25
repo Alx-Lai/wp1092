@@ -29,6 +29,10 @@ const useGame = () =>{
         const data = {type: "GUESS", data:{sender: me, body: word}};
         sendData(data); 
     };
+    const sendDraw = ({type,color,x,y})=>{
+        const data = {type:'DRAW', data:{type,color,x,y}}
+        sendData(data)
+    }
 
     return {joinRoom, status, confirmRoundStart, guessWord};
 }

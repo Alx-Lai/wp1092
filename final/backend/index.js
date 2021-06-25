@@ -386,48 +386,6 @@ wss.on('connection', function connection(client) {
         console.log(answer)
         break;
       }
-/*
-      case "END":{
-        console.log('Round '+Rounds[client.roomNumber]+' end')
-        if((Rounds[client.roomNumber]+1) == 10){
-          let winner = Rooms[client.roomNumber].users[0];
-          for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
-            if(winner.score < Rooms[client.roomNumber].users[i].score){
-              winner = Rooms[client.roomNumber].users[i];
-            }
-          }
-          clientRooms[client.roomNumber].forEach((client)=>{
-            client.sendEvent({
-              type: 'WINNER',
-              data:{
-                winner
-              }
-            })
-          })
-          break;  
-        }
-        let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
-        let count = 0; 
-        clientRooms[client.roomNumber].forEach((client)=>{
-          client.sendEvent({
-            type: 'START',
-            data:{
-              isdraw: count==drawerNum,
-              answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
-              isround0 : false
-            }
-          })
-          count++;
-        })
-        //delete old message
-        await MessageModel.deleteMany({roomNumber:client.roomNumber})
-        await PointModel.deleteMany({roomNumber:client.roomNumber})
-
-        Rounds[client.roomNumber]++;
-        
-        break;
-      }
-*/
     }
     // disconnected
     client.once('close', () => {
