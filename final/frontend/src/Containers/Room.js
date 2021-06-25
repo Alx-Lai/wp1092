@@ -46,7 +46,6 @@ const Room = ({me, info, displayStatus})=>{
 
     useEffect(() => {
       if(status.type == "START"){ //{type:"START"}
-        setroundTime(0);
         beforeRoundStart(status.data);
         console.log(status.data);
         setgamestart(true);
