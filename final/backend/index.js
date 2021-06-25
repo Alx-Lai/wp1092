@@ -72,6 +72,7 @@ let Answers = {};
 let RoomCount = 0
 let Rounds = {}
 let Correct = {};
+let Time = {};
 const validateRoom = async ()=>{
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
     Rooms[RoomCount] = new RoomModel();
@@ -321,12 +322,69 @@ wss.on('connection', function connection(client) {
           }
           count++;
         })
+        
+        //set time
+        Time[client.roomNumber] = 100;
+        
+        let countdown = setInterval(()=>{
+          if(Time[client.roomNumber] > 0){
+            Time[client.roomNumber]--;
+            clientRooms[client.roomNumber].forEach((client)=>{
+              client.sendEvent({
+                  type:'TIME',
+                  data:{
+                    time:Time[client.roomNumber]
+                  }
+              })
+            })
+          }else{
+            clearInterval(countdown);
+            /************* *end* **************/
+            console.log('Round '+Rounds[client.roomNumber]+' end')
+            if((Rounds[client.roomNumber]+1) == 10){
+              let winner = Rooms[client.roomNumber].users[0];
+              for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
+                if(winner.score < Rooms[client.roomNumber].users[i].score){
+                  winner = Rooms[client.roomNumber].users[i];
+                }
+              }
+              clientRooms[client.roomNumber].forEach((client)=>{
+                client.sendEvent({
+                  type: 'WINNER',
+                  data:{
+                    winner
+                  }
+                })
+              })
+              break;  
+            }
+            let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+            let count = 0; 
+            clientRooms[client.roomNumber].forEach((client)=>{
+              client.sendEvent({
+                type: 'START',
+                data:{
+                  isdraw: count==drawerNum,
+                  answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
+                  isround0 : false
+                }
+              })
+              count++;
+            })
+            //delete old message
+            await MessageModel.deleteMany({roomNumber:client.roomNumber})
+            await PointModel.deleteMany({roomNumber:client.roomNumber})
+
+            Rounds[client.roomNumber]++;
+            /************* *end* **************/
+          }
+        },1000);
         console.log('start  Round:' + Rounds[client.roomNumber])
         console.log('answer:')
         console.log(answer)
         break;
       }
-
+/*
       case "END":{
         console.log('Round '+Rounds[client.roomNumber]+' end')
         if((Rounds[client.roomNumber]+1) == 10){
@@ -367,6 +425,7 @@ wss.on('connection', function connection(client) {
         
         break;
       }
+*/
     }
     // disconnected
     client.once('close', () => {
