@@ -340,7 +340,7 @@ wss.on('connection', function connection(client) {
                   winner = Rooms[client.roomNumber].users[i];
                 }
               }
-              for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
+              for(var i=0;i<Rooms[client.roomNumber].users.length;i++){
                 if(winner.score == Rooms[client.roomNumber].users[i].score){
                   winners.push(Rooms[client.roomNumber].users[i]);
                 }
@@ -349,7 +349,7 @@ wss.on('connection', function connection(client) {
                 client.sendEvent({
                   type: 'WINNER',
                   data:{
-                    winners:winners
+                    winners
                   }
                 })
               })

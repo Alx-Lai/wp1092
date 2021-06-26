@@ -32,7 +32,6 @@ const Room = ({me, info, displayStatus, setStart})=>{
 
     const beforeRoundStart=(data)=>{
       // setisdrawing(data.isdraw);
-      console.log("drawer:",data.drawer)
       if(data.isround0){
         setdisplayTitle("Game is about to start!");
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"}`)
@@ -60,11 +59,21 @@ const Room = ({me, info, displayStatus, setStart})=>{
         setgamestart(true);
         setcanGuess(false);
         setdrawing(false);
+        setusers(users.map(n=>{
+          let a = n;
+          a.draw = false;
+          return a;
+        }))
       }
       if(status.type == "ROUNDSTART"){ 
         // setroundStart(performance.now());
         if(isdrawer){
           setdrawer(me._id)
+          setusers(users.map(n=>{
+            let a = n;
+            if(a.me==true) a.draw=true;
+            return a;
+          }))
           setword(status.data.answer);
           setisdrawing(true);
           setdrawing(true);
@@ -73,6 +82,11 @@ const Room = ({me, info, displayStatus, setStart})=>{
         }
       }else{
         setdrawer(status.data.drawer._id)
+        setusers(users.map(n=>{
+          let a = n;
+          if(a._id==status.data.drawer._id) a.draw=true;
+          return a;
+        }))
           setcanGuess(true);
           setdrawing(true);
         }
@@ -81,7 +95,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
       //   me._id = status.data.id;
       // }
       if(status.type == "JOIN"){ 
-        setusers([...users, {name: status.data.userList.name, me: false, score: status.data.userList.score, color: status.data.userList.color, _id: status.data.userList._id}])
+        setusers([...users, {name: status.data.userList.name, me: false, draw:false, score: status.data.userList.score, color: status.data.userList.color, _id: status.data.userList._id}])
       }
       if(status.type == "LEAVE"){ 
         setusers(users.filter(n=>n._id !== status.data.id))
@@ -150,6 +164,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
       setusers([me,...info.userList.map(n=>{
         let a = n;
         a.me = false;
+        a.draw = false;
         return a;
       })])
     }, [info])
