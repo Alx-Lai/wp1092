@@ -405,6 +405,14 @@ wss.on('connection', function connection(client) {
       if(id == Drawer[client.roomNumber]._id){
         Time[client.roomNumber] = -3; //drawer left
       }
+      clientRooms[client.roomNumber].forEach((client)=>{
+        client.sendEvent({
+          type: 'LEAVE',
+          data:{
+            id
+          }
+        })
+      })
       if(clientRooms[client.roomNumber].size == 1){
         clientRooms[client.roomNumber].forEach((client)=>{
           client.sendEvent({
@@ -418,16 +426,8 @@ wss.on('connection', function connection(client) {
         })
         Rooms[client.roomNumber].users = [];
         clientRooms[client.roomNumber] = undefined;
-      }else{
-        clientRooms[client.roomNumber].forEach((client)=>{
-          client.sendEvent({
-            type: 'LEAVE',
-            data:{
-              id
-            }
-          })
-        })
       }
+      
       UserModel.deleteOne({_id:id});
     }});
   });
