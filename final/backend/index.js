@@ -30,18 +30,11 @@ const messageSchema = new Schema({
 const problemSchema = new Schema({
   answer: {type: String, require: true},
 })
-const roomSchema = new Schema({
-  users: [{ type: mongoose.Types.ObjectId, ref: 'User'}],
-  messages: [{type: mongoose.Types.ObjectId, ref: 'Message'}],
-  problems : [{type: mongoose.Types.ObjectId, ref: 'Problem'}],
-  round: {type: Number},
-})
 
 
 const UserModel = mongoose.model('User', userSchema);
 const MessageModel = mongoose.model('Message', messageSchema);
 const ProblemModel = mongoose.model('Problem', problemSchema);
-const RoomModel = mongoose.model('Room', roomSchema);
 
 /* -------------------------------------------------------------------------- */
 /*                                  UTILITIES                                 */
@@ -66,14 +59,17 @@ let Rounds = {}
 let Correct = {};
 let Time = {};
 const MAXTIME = 100
-const validateRoom = async ()=>{
+const validateRoom = ()=>{
+  for(var i=0;i<RoomCount;i++){
+    if(Rooms[RoomCount].users.length < 10){
+      return RoomCount;
+    }
+  }
   if(!Rooms[RoomCount] || !Rooms[RoomCount].users){
-    Rooms[RoomCount] = new RoomModel();
-    Rooms[RoomCount].save()
+    Rooms[RoomCount] = {};
   }else if(Rooms[RoomCount].users.length >= 10){
     RoomCount++;
-    Rooms[RoomCount] = new RoomModel();
-    Rooms[RoomCount].save()
+    Rooms[RoomCount] = {};
   }
   return RoomCount;
 }
@@ -225,6 +221,7 @@ wss.on('connection', function connection(client) {
           if(score < 1){
             score = 1
           }
+          
           Rooms[client.roomNumber].users.map((user)=>{
             if(user._id == client.userid){
               user.score += score
@@ -232,6 +229,9 @@ wss.on('connection', function connection(client) {
           })
 
           Correct[client.roomNumber]++;
+          if(Correct[client.roomNumber] == (Rooms[client.roomNumber].users.length-1)){
+            Time[client.roomNumber] = 2;
+          }
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type: 'MESSAGE',
@@ -287,7 +287,7 @@ wss.on('connection', function connection(client) {
         //assign drawer
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
-        let drawer = clientRooms[client.roomNumber][Object.keys(clientRooms[client.roomNumber])[drawerNum]]
+        let drawer = Rooms[client.roomNumber].users[drawerNum]
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === drawerNum){
@@ -341,6 +341,8 @@ wss.on('connection', function connection(client) {
                   }
                 })
               })
+              Rooms.filter
+            /************* *end* **************/
               //break;  
             }else{
               let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
@@ -360,7 +362,6 @@ wss.on('connection', function connection(client) {
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
               Rounds[client.roomNumber]++;
             }
-            /************* *end* **************/
           }
         },250);
         // console.log('start  Round:' + Rounds[client.roomNumber])
@@ -385,6 +386,7 @@ wss.on('connection', function connection(client) {
           }
         })
       })
+      UserModel.deleteOne({_id:id});
     }});
   });
 });
