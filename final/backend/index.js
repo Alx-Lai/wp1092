@@ -405,6 +405,15 @@ wss.on('connection', function connection(client) {
       if(id == Drawer[client.roomNumber]._id){
         Time[client.roomNumber] = -3; //drawer left
       }
+      if(clientRooms[client.roomNumber].size == 1){
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.sendEvent({
+            type: 'KICK',
+            data:{
+            }
+          })
+        })
+      }
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
           type: 'LEAVE',
