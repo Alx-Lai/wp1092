@@ -37,10 +37,6 @@ const MessageModel = mongoose.model('Message', messageSchema);
 const ProblemModel = mongoose.model('Problem', problemSchema);
 
 /* -------------------------------------------------------------------------- */
-/*                                  UTILITIES                                 */
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
 /*                            SERVER INITIALIZATION                           */
 /* -------------------------------------------------------------------------- */
 const server = http.createServer(app);
@@ -58,6 +54,7 @@ let RoomCount = 0
 let Rounds = {}
 let Correct = {};
 let Time = {};
+let Drawer = {}
 const MAXTIME = 100
 const validateRoom = ()=>{
   for(var i=0;i<RoomCount;i++){
@@ -218,6 +215,11 @@ wss.on('connection', function connection(client) {
         
         if(body === Answers[client.roomNumber][Rounds[client.roomNumber]]){
           let score = 10 - Correct[client.roomNumber];
+          let drawerscore = 2;
+          Correct[client.roomNumber]++;
+          if(Correct[client.roomNumber] == 1){
+            drawerscore = 11
+          }
           if(score < 1){
             score = 1
           }
@@ -225,10 +227,11 @@ wss.on('connection', function connection(client) {
           Rooms[client.roomNumber].users.map((user)=>{
             if(user._id == client.userid){
               user.score += score
+            }else if(user._id == Drawer[client.roomNumber]._id){
+              user.score += drawerscore
             }
           })
 
-          Correct[client.roomNumber]++;
           if(Correct[client.roomNumber] == (Rooms[client.roomNumber].users.length-1)){
             Time[client.roomNumber] = 2;
           }
@@ -239,7 +242,8 @@ wss.on('connection', function connection(client) {
                 sender,
                 body: "",
                 correct: true,
-                score 
+                score,
+                drawerscore
               }
             })
           })
@@ -288,6 +292,7 @@ wss.on('connection', function connection(client) {
         let count = 0;
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
         let drawer = Rooms[client.roomNumber].users[drawerNum]
+        Drawer[client.roomNumber] = drawer
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === drawerNum){
