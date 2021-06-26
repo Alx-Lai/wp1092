@@ -6,7 +6,7 @@ import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
 import CanvasView from '../Components/CanvasView';
-const Room = ({me, info, displayStatus})=>{ 
+const Room = ({me, info, displayStatus, setStart})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
     const {status, confirmRoundStart, guessWord, sendDraw} = useGame();
@@ -82,6 +82,42 @@ const Room = ({me, info, displayStatus})=>{
       }
       if(status.type == "LEAVE"){ 
         setusers(users.filter(n=>n._id !== status.data.id))
+      }
+      if(status.type == "WINNER"){
+        if(status.data.winners.length>1){
+          let str = "The winners are"
+          status.data.winners.forEach(n => {
+            console.log("winner",n); 
+            str.concat(" ", n.name)
+          });
+          str.concat(" ", "!");
+          setdisplayTitle(str);
+        }else{
+          setdisplayTitle(`The winner is ${status.type.name}`);
+        }
+        if(status.data.winners.find(n=>n._id==me._id)){
+          setdisplayText("Well done!")
+        }else setdisplayText("It's ok! You got it next time!")
+        setusers([me]);
+          setisdrawer(false);
+          setisdrawing(false);
+          setcanGuess(false);
+          setdrawing(false);
+        let timer = setTimeout(() => {
+          //kick you out
+          setdisplayTitle("Gartic");
+          setdisplayText("made by Alex and Leyun");
+          setroundTime(100);
+          setmessages([]);
+          setword("");
+          setguessinput("");
+          setgamestart(false);
+          setStart(false);
+          setusernum(1);
+        }, 6000);
+        return () => {
+          clearTimeout(timer);
+        };
       }
       if(status.type == "DRAW"){
         setstroke(status.data);

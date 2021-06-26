@@ -10,7 +10,7 @@ const Waiting = ({visible, num}) => {
             centered={true}
             // id="wait-modal"
         >
-            {`waiting for other players... ${num}/3`}
+            {(num>=3)?'waiting for the next round to join...':`waiting for other players... ${num}/3`}
         </Modal>
     )
 }

@@ -326,18 +326,24 @@ wss.on('connection', function connection(client) {
             clearInterval(countdown);
             /************* *end* **************/
             // console.log('Round '+Rounds[client.roomNumber]+' end')
-            if((Rounds[client.roomNumber]+1) == 10){
+            if((Rounds[client.roomNumber]+1) == 2){
+              let winners = [];
               let winner = Rooms[client.roomNumber].users[0];
               for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
                 if(winner.score < Rooms[client.roomNumber].users[i].score){
                   winner = Rooms[client.roomNumber].users[i];
                 }
               }
+              for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
+                if(winner.score == Rooms[client.roomNumber].users[i].score){
+                  winners.push(Rooms[client.roomNumber].users[i]);
+                }
+              }
               clientRooms[client.roomNumber].forEach((client)=>{
                 client.sendEvent({
                   type: 'WINNER',
                   data:{
-                    winner
+                    winners
                   }
                 })
               })
