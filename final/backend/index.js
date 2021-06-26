@@ -357,7 +357,11 @@ wss.on('connection', function connection(client) {
                 await UserModel.deleteOne({user})
               })
               Rooms[client.roomNumber].users = [];
-              clientRooms[client.roomNumber] = undefined;
+              let num =client.roomNumber;
+              clientRooms[client.roomNumber].forEach((client)=>{
+                client.roomNumber = undefined
+              })
+              clientRooms[num] = undefined;
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
             /************* *end* **************/
               //break;  
@@ -420,6 +424,7 @@ wss.on('connection', function connection(client) {
             data:{
             }
           })
+          client.roomNumber = undefined;
         })
         Rooms[client.roomNumber].users.map(async(user)=>{
           await UserModel.deleteOne({user})

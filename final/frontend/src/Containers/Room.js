@@ -6,7 +6,7 @@ import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
 import CanvasView from '../Components/CanvasView';
-const Room = ({me, info, displayStatus, setMe})=>{ 
+const Room = ({me, info, displayStatus, setMe, setStart})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
     const {status, confirmRoundStart, guessWord, sendDraw, joinRoom} = useGame();
@@ -134,12 +134,15 @@ const Room = ({me, info, displayStatus, setMe})=>{
           setword("");
           setguessinput("");
           setusernum(1);
-          let newme = me;
-          newme.draw = false;
-          setMe(newme);
+          // let newme = me;
+          // newme.draw = false;
+          // newme._id = "";
+          // setMe(newme);
+          // setgamestart(false);
+          // setusers([newme]);
+          // joinRoom(newme);
           setgamestart(false);
-          setusers([newme]);
-          joinRoom(newme);
+          setStart(false);
         }, 6000);
         return () => {
           clearTimeout(timer);
