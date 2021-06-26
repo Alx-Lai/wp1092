@@ -413,6 +413,11 @@ wss.on('connection', function connection(client) {
             }
           })
         })
+        Rooms[client.roomNumber].users.map(async(user)=>{
+          await UserModel.deleteOne({user})
+        })
+        Rooms[client.roomNumber].users = [];
+        clientRooms[client.roomNumber] = undefined;
       }
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
