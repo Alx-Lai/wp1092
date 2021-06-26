@@ -257,7 +257,8 @@ wss.on('connection', function connection(client) {
                 sender,
                 body,
                 correct: false,
-                score: 0
+                score: 0,
+                drawerscore:0
               }
             })
           })
@@ -348,7 +349,7 @@ wss.on('connection', function connection(client) {
                 client.sendEvent({
                   type: 'WINNER',
                   data:{
-                    winners
+                    winners:winners
                   }
                 })
               })

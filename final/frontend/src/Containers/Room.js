@@ -24,6 +24,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
     const [progcolor, setprogcolor] = useState("#5dcc26");
     const messagesEndRef = useRef(null);
     const [stroke, setstroke] = useState({});
+    const [drawer, setdrawer] = useState("");
 
     const scrollToBottom = async () => {
       await messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -31,6 +32,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
 
     const beforeRoundStart=(data)=>{
       // setisdrawing(data.isdraw);
+      console.log("drawer:",data.drawer)
       if(data.isround0){
         setdisplayTitle("Game is about to start!");
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"}`)
@@ -46,9 +48,8 @@ const Room = ({me, info, displayStatus, setStart})=>{
         return () => {
           clearTimeout(timer);
         };
-        
       }else{
-        setisdrawer(false);
+        setisdrawer(false)
       }
     }
 
@@ -63,6 +64,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
       if(status.type == "ROUNDSTART"){ 
         // setroundStart(performance.now());
         if(isdrawer){
+          setdrawer(me._id)
           setword(status.data.answer);
           setisdrawing(true);
           setdrawing(true);
@@ -70,6 +72,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
         return () => {
         }
       }else{
+        setdrawer(status.data.drawer._id)
           setcanGuess(true);
           setdrawing(true);
         }
@@ -84,16 +87,16 @@ const Room = ({me, info, displayStatus, setStart})=>{
         setusers(users.filter(n=>n._id !== status.data.id))
       }
       if(status.type == "WINNER"){
+        console.log("winner",status.data);
         if(status.data.winners.length>1){
-          let str = "The winners are"
+          let str = "The winners are" 
           status.data.winners.forEach(n => {
-            console.log("winner",n); 
             str.concat(" ", n.name)
           });
           str.concat(" ", "!");
           setdisplayTitle(str);
         }else{
-          setdisplayTitle(`The winner is ${status.type.name}`);
+          setdisplayTitle(`The winner is ${status.data.winners[0].name}`);
         }
         if(status.data.winners.find(n=>n._id==me._id)){
           setdisplayText("Well done!")
@@ -130,6 +133,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
         setusers(users.map((n=>{
           let a = n;
           if(a._id==status.data.sender) a.score+=status.data.score;
+          else if(a._id==drawer) a.score+=status.data.drawerscore;
           return a;
         })))
         let m = status.data;
@@ -142,7 +146,6 @@ const Room = ({me, info, displayStatus, setStart})=>{
     }, [status])
 
     useEffect(() => {
-      console.log(info)
       setmessages(info.messages)
       setusers([me,...info.userList.map(n=>{
         let a = n;
