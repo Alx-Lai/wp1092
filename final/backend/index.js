@@ -233,7 +233,7 @@ wss.on('connection', function connection(client) {
           })
 
           if(Correct[client.roomNumber] == (Rooms[client.roomNumber].users.length-1)){
-            Time[client.roomNumber] = 2;
+            Time[client.roomNumber] = -2;//all ac
           }
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
@@ -340,7 +340,7 @@ wss.on('connection', function connection(client) {
                   winner = Rooms[client.roomNumber].users[i];
                 }
               }
-              for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
+              for(var i=0;i<Rooms[client.roomNumber].users.length;i++){
                 if(winner.score == Rooms[client.roomNumber].users[i].score){
                   winners.push(Rooms[client.roomNumber].users[i]);
                 }
@@ -349,15 +349,21 @@ wss.on('connection', function connection(client) {
                 client.sendEvent({
                   type: 'WINNER',
                   data:{
-                    winners:winners
+                    winners
                   }
                 })
               })
-              
+              Rooms[client.roomNumber] = {};
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
             /************* *end* **************/
               //break;  
             }else{
+              let type = 'TimesUp';
+              if(Time[client.roomNumber] == -2){
+                type = 'AllAC'
+              }else if(Time[client.roomNumber] == -3){
+                type = 'DrawerLeft'
+              }
               let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
               let count = 0; 
               clientRooms[client.roomNumber].forEach((client)=>{
@@ -366,7 +372,8 @@ wss.on('connection', function connection(client) {
                   data:{
                     isdraw: count==drawerNum,
                     answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
-                    isround0 : false
+                    isround0 : false,
+                    type
                   }
                 })
                 count++;
@@ -391,6 +398,9 @@ wss.on('connection', function connection(client) {
           return user._id !== client.userid
         })
       let id = client.userid;
+      if(id == Drawer[client.roomNumber]._id){
+        Time[client.roomNumber] = -3; //drawer left
+      }
       clientRooms[client.roomNumber].forEach((client)=>{
         client.sendEvent({
           type: 'LEAVE',
