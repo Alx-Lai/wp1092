@@ -285,7 +285,7 @@ wss.on('connection', function connection(client) {
       // start a round
       case 'START':{
         //start draw for [round]th client
-        
+        console.log('start')
         //init correct poeple
         Correct[client.roomNumber] = 0;
         
@@ -353,7 +353,11 @@ wss.on('connection', function connection(client) {
                   }
                 })
               })
-              Rooms[client.roomNumber] = {};
+              Rooms[client.roomNumber].users.map(async(user)=>{
+                await UserModel.deleteOne({user})
+              })
+              Rooms[client.roomNumber].users = [];
+              clientRooms[client.roomNumber] = undefined;
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
             /************* *end* **************/
               //break;  
