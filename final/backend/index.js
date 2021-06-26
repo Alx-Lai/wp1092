@@ -346,7 +346,8 @@ wss.on('connection', function connection(client) {
                   }
                 })
               })
-              Rooms.filter
+              
+              await MessageModel.deleteMany({roomNumber:client.roomNumber})
             /************* *end* **************/
               //break;  
             }else{
