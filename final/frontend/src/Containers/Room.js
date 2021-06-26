@@ -111,9 +111,9 @@ const Room = ({me, info, displayStatus, setStart})=>{
         if(status.data.winners.length>1){
           let str = "The winners are" 
           status.data.winners.forEach(n => {
-            str.concat(" ", n.name)
+            str = str.concat(" ", n.name)
           });
-          str.concat(" ", "!");
+          str = str.concat(" ", "!");
           setdisplayTitle(str);
         }else{
           setdisplayTitle(`The winner is ${status.data.winners[0].name}`);
@@ -121,13 +121,13 @@ const Room = ({me, info, displayStatus, setStart})=>{
         if(status.data.winners.find(n=>n._id==me._id)){
           setdisplayText("Well done!")
         }else setdisplayText("It's ok! You got it next time!")
-          setusers([me]);
           setisdrawer(false);
           setisdrawing(false);
           setcanGuess(false);
           setdrawing(false);
         let timer = setTimeout(() => {
           //kick you out
+          setusers([me]);
           setdisplayTitle("Gartic");
           setdisplayText("made by Alex and Leyun");
           setroundTime(100);
