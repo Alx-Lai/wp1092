@@ -127,18 +127,18 @@ const Room = ({me, info, displayStatus, setMe})=>{
           setdrawing(false);
         let timer = setTimeout(() => {
           //kick you out
-          setusers([me]);
           setdisplayTitle("Gartic");
           setdisplayText("made by Alex and Leyun");
           setroundTime(100);
           setmessages([]);
           setword("");
           setguessinput("");
-          setgamestart(false);
           setusernum(1);
           let newme = me;
           newme.draw = false;
           setMe(newme);
+          setgamestart(false);
+          setusers([newme]);
           joinRoom(newme);
         }, 6000);
         return () => {
@@ -147,6 +147,30 @@ const Room = ({me, info, displayStatus, setMe})=>{
       }
       if(status.type == "DRAW"){
         setstroke(status.data);
+      }
+      if(status.type == "KICK"){
+        setdisplayTitle(`Everyone else disconnected...`);
+        setdisplayText(`let me find you another room...`);
+        setisdrawer(false);
+          setisdrawing(false);
+          setcanGuess(false);
+          setdrawing(false);
+          let timer = setTimeout(() => {
+            //kick you out
+            setdisplayTitle("Gartic");
+            setdisplayText("made by Alex and Leyun");
+            setroundTime(100);
+            setmessages([]);
+            setword("");
+            setguessinput("");
+            setgamestart(false);
+            setusernum(1);
+            let newme = me;
+            newme.draw = false;
+            setMe(newme);
+            setusers([newme]);
+            joinRoom(newme);
+          }, 6000);
       }
       if(status.type == "TIME"){
         setroundTime(status.data.time);
@@ -177,34 +201,6 @@ const Room = ({me, info, displayStatus, setMe})=>{
         return a;
       })])
     }, [info])
-
-    useEffect(() => {
-      setusernum(users.length);
-      if(users.length<=1){
-        setdisplayTitle(`Everyone else disconnected...`);
-        setdisplayText(`let me find you another room...`);
-        setisdrawer(false);
-          setisdrawing(false);
-          setcanGuess(false);
-          setdrawing(false);
-          let timer = setTimeout(() => {
-            //kick you out
-            setusers([me]);
-            setdisplayTitle("Gartic");
-            setdisplayText("made by Alex and Leyun");
-            setroundTime(100);
-            setmessages([]);
-            setword("");
-            setguessinput("");
-            setgamestart(false);
-            setusernum(1);
-            let newme = me;
-            newme.draw = false;
-            setMe(newme);
-            joinRoom(newme);
-          }, 6000);
-      }
-    }, [users])
 
     useEffect(() => {
       if(roundTime>=40) {
