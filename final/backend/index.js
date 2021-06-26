@@ -418,15 +418,16 @@ wss.on('connection', function connection(client) {
         })
         Rooms[client.roomNumber].users = [];
         clientRooms[client.roomNumber] = undefined;
-      }
-      clientRooms[client.roomNumber].forEach((client)=>{
-        client.sendEvent({
-          type: 'LEAVE',
-          data:{
-            id
-          }
+      }else{
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.sendEvent({
+            type: 'LEAVE',
+            data:{
+              id
+            }
+          })
         })
-      })
+      }
       UserModel.deleteOne({_id:id});
     }});
   });
