@@ -6,10 +6,10 @@ import {Input, Progress} from "antd";
 import useGame from "../Hooks/useGame";
 import Waiting from './Waiting';
 import CanvasView from '../Components/CanvasView';
-const Room = ({me, info, displayStatus, setStart})=>{ 
+const Room = ({me, info, displayStatus, setMe})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
-    const {status, confirmRoundStart, guessWord, sendDraw} = useGame();
+    const {status, confirmRoundStart, guessWord, sendDraw, joinRoom} = useGame();
     const [gamestart, setgamestart] = useState(false);
     const [displayTitle, setdisplayTitle] = useState("Gartic");
     const [displayText, setdisplayText] = useState("made by Alex and Leyun");
@@ -135,8 +135,11 @@ const Room = ({me, info, displayStatus, setStart})=>{
           setword("");
           setguessinput("");
           setgamestart(false);
-          setStart(false);
           setusernum(1);
+          let newme = me;
+          newme.draw = false;
+          setMe(newme);
+          joinRoom(newme);
         }, 6000);
         return () => {
           clearTimeout(timer);
@@ -174,6 +177,34 @@ const Room = ({me, info, displayStatus, setStart})=>{
         return a;
       })])
     }, [info])
+
+    useEffect(() => {
+      setusernum(users.length);
+      if(users.length<=1){
+        setdisplayTitle(`Everyone else disconnected...`);
+        setdisplayText(`let me find you another room...`);
+        setisdrawer(false);
+          setisdrawing(false);
+          setcanGuess(false);
+          setdrawing(false);
+          let timer = setTimeout(() => {
+            //kick you out
+            setusers([me]);
+            setdisplayTitle("Gartic");
+            setdisplayText("made by Alex and Leyun");
+            setroundTime(100);
+            setmessages([]);
+            setword("");
+            setguessinput("");
+            setgamestart(false);
+            setusernum(1);
+            let newme = me;
+            newme.draw = false;
+            setMe(newme);
+            joinRoom(newme);
+          }, 6000);
+      }
+    }, [users])
 
     useEffect(() => {
       if(roundTime>=40) {

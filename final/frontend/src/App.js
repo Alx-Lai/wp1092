@@ -24,7 +24,7 @@ const App= ()=> {
   const [roomInfo, setRoomInfo] = useState([]);
   return (
     <div className="App">
-      {start? (<Room me={me} info={roomInfo} displayStatus={displayStatus} setStart={setStart}/>) : (<Begin setStart = {setStart} setMe={setMe} me = {me} setInfo={setRoomInfo} displayStatus={displayStatus}/>)}
+      {start? (<Room me={me} info={roomInfo} displayStatus={displayStatus} setMe={setMe}/>) : (<Begin setStart = {setStart} setMe={setMe} me = {me} setInfo={setRoomInfo} displayStatus={displayStatus}/>)}
     </div>
   );
 }
