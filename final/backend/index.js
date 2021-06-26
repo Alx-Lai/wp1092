@@ -17,7 +17,7 @@ require('dotenv-defaults').config();
 /* -------------------------------------------------------------------------- */
 const { Schema } = mongoose;
 const userSchema = new Schema({
-  name: { type: String, require: true},
+  name: {type: String, require: true},
   color: {type: String},
   score: {type: Number, default: 0},
 });

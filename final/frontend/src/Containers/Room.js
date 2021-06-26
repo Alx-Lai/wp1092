@@ -35,9 +35,15 @@ const Room = ({me, info, displayStatus, setStart})=>{
       if(data.isround0){
         setdisplayTitle("Game is about to start!");
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"}`)
-      }else{
+      }else if(data.type=="TimesUp"){
         setdisplayTitle(`The answer of last round is ${data.answer}!`);
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"} in next round.`)
+      }else if(data.type=="AllAC"){
+        setdisplayTitle(`Everybody hit the answer!`);
+        setdisplayText(`good job guys!`)
+      }if(data.type=="DrawerLeft"){
+        setdisplayTitle(`Drawer disconnected...`);
+        setdisplayText(`Wait for the next round...`)
       }
       if(data.isdraw){
         setisdrawer(true);
@@ -115,7 +121,7 @@ const Room = ({me, info, displayStatus, setStart})=>{
         if(status.data.winners.find(n=>n._id==me._id)){
           setdisplayText("Well done!")
         }else setdisplayText("It's ok! You got it next time!")
-        setusers([me]);
+          setusers([me]);
           setisdrawer(false);
           setisdrawing(false);
           setcanGuess(false);
