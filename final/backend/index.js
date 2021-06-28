@@ -358,11 +358,11 @@ wss.on('connection', function connection(client) {
               })
               Rooms[client.roomNumber].users = [];
               let num =client.roomNumber;
+              await MessageModel.deleteMany({roomNumber:client.roomNumber})
               clientRooms[client.roomNumber].forEach((client)=>{
                 client.roomNumber = undefined
               })
               clientRooms[num] = undefined;
-              await MessageModel.deleteMany({roomNumber:client.roomNumber})
             /************* *end* **************/
               //break;  
             }else{
