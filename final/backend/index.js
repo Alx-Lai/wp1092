@@ -400,41 +400,42 @@ wss.on('connection', function connection(client) {
     }
     // disconnected
     client.once('close', () => {
-      if(client.roomNumber !== undefined){
+      if(client.roomNumber && clientRooms[client.roomNumber]){
         clientRooms[client.roomNumber].delete(client);
         Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
           return user._id !== client.userid
         })
-      let id = client.userid;
-      if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
-        Time[client.roomNumber] = -3; //drawer left
-      }
-      clientRooms[client.roomNumber].forEach((client)=>{
-        client.sendEvent({
-          type: 'LEAVE',
-          data:{
-            id
-          }
-        })
-      })
-      if(clientRooms[client.roomNumber].size == 1){
+        let id = client.userid;
+        if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
+          Time[client.roomNumber] = -3; //drawer left
+        }
         clientRooms[client.roomNumber].forEach((client)=>{
           client.sendEvent({
-            type: 'KICK',
+            type: 'LEAVE',
             data:{
+              id
             }
           })
-          client.roomNumber = undefined;
         })
-        Rooms[client.roomNumber].users.map(async(user)=>{
-          await UserModel.deleteOne({user})
-        })
-        Rooms[client.roomNumber].users = [];
-        clientRooms[client.roomNumber] = undefined;
-      }
+        if(clientRooms[client.roomNumber].size == 1){
+          clientRooms[client.roomNumber].forEach((client)=>{
+            client.sendEvent({
+              type: 'KICK',
+              data:{
+              }
+            })
+            client.roomNumber = undefined;
+          })
+          Rooms[client.roomNumber].users.map(async(user)=>{
+            await UserModel.deleteOne({user})
+          })
+          Rooms[client.roomNumber].users = [];
+          clientRooms[client.roomNumber] = undefined;
+        }
       
-      UserModel.deleteOne({_id:id});
-    }});
+        UserModel.deleteOne({_id:id});
+      }
+    });
   });
 });
 
