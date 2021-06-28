@@ -56,6 +56,7 @@ let Correct = {};
 let Time = {};
 let Drawer = {}
 const MAXTIME = 100
+const MAXROUND = 2
 const validateRoom = ()=>{
   for(var i=0;i<RoomCount;i++){
     if(Rooms[RoomCount].users.length < 10){
@@ -88,7 +89,6 @@ wss.on('connection', function connection(client) {
         const newUser = new UserModel({name: name, color: color, score: 0});
         newUser.save();
         client.userid = newUser._id;
-        // console.log(client.userid)
         const roomNumber = await validateRoom();
         client.roomNumber = roomNumber
         if(!clientRooms[client.roomNumber]){
@@ -332,7 +332,7 @@ wss.on('connection', function connection(client) {
             clearInterval(countdown);
             /************* *end* **************/
             // console.log('Round '+Rounds[client.roomNumber]+' end')
-            if((Rounds[client.roomNumber]+1) == 2){
+            if((Rounds[client.roomNumber]+1) == MAXROUND){
               let winners = [];
               let winner = Rooms[client.roomNumber].users[0];
               for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
@@ -419,7 +419,7 @@ wss.on('connection', function connection(client) {
             }
           })
         })
-        if(clientRooms[client.roomNumber].size == 1){
+        if(clientRooms[client.roomNumber].size == 1 &&(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type: 'KICK',
