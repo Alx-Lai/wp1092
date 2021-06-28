@@ -78,6 +78,8 @@ wss.on('connection', function connection(client) {
   client.on('message', async function incoming(message) {
     message = JSON.parse(message);
     const {type} = message
+    console.log(type)
+    
     switch(type){
       case 'JOIN':{
         const {
@@ -280,6 +282,7 @@ wss.on('connection', function connection(client) {
           drawer = Rooms[client.roomNumber].users[drawerNum]
         }
         Drawer[client.roomNumber] = drawer
+        console.log(client.roomNumber);
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
           if(count === drawerNum){

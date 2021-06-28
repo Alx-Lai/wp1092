@@ -31,7 +31,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
   };
 
     const beforeRoundStart=(data)=>{
-      // setisdrawing(data.isdraw);
+      console.log(data)
       if(data.isround0){
         setdisplayTitle("Game is about to start!");
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"}`)
@@ -66,6 +66,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
         setgamestart(true);
         setcanGuess(false);
         setdrawing(false);
+        setisdrawing(false)
         setusers(users.map(n=>{
           let a = n;
           a.draw = false;
@@ -244,7 +245,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
               :<p className="guessFont" ref={messagesEndRef} >{n.sender.name}: {n.body}</p>
               )
         ))}</div>
-            <Input.Search onChange={(e) => 
+            <Input.Search autoFocus={true} onChange={(e) => 
           setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{
             if(guessinput.trim()=="") displayStatus({type:"error", msg:"guess can't not be blank"});
             else if(!(/^[a-zA-Z\s]*$/.test(guessinput)))displayStatus({type:"error", msg:"guess can't contain non-letter"});

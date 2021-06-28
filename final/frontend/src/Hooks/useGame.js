@@ -46,6 +46,7 @@ const useGame = ({displayStatus}) =>{
             client.close();
             return;
         }
+        console.log(data.type)
         client.send(JSON.stringify(await data));
     }
     const joinRoom = (me) => {
