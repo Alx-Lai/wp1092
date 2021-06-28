@@ -399,9 +399,11 @@ wss.on('connection', function connection(client) {
       }
     }
     // disconnected
-    client.once('close', () => {
-      if(client.roomNumber && clientRooms[client.roomNumber]){
-        clientRooms[client.roomNumber].delete(client);
+    client.once('close',() => {
+      if(client.roomNumber !== undefined){
+        if(clientRooms[client.roomNumber] !== undefined){
+          clientRooms[client.roomNumber].delete(client);
+        }
         Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
           return user._id !== client.userid
         })
