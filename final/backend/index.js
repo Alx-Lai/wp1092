@@ -419,7 +419,8 @@ wss.on('connection', function connection(client) {
         if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size != 1 && Time[client.roomNumber] == MAXTIME+1 ){
           let drawerNum;
           if(Rooms[client.roomNumber] != undefined){
-            drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+            Rounds[client.roomNumber]+=1
+            drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
           }
           let count = 0; 
           if(clientRooms[client.roomNumber] != undefined){
