@@ -124,7 +124,8 @@ wss.on('connection', function connection(client) {
 
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
-        if(clientRooms[client.roomNumber].size === 3 && (Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
+
+        if(clientRooms[client.roomNumber].size === 3 && (isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)){
           Rounds[client.roomNumber] = 0;
           let count = 0;
           
