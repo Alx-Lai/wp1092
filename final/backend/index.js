@@ -273,8 +273,10 @@ wss.on('connection', function connection(client) {
         
         //assign drawer
         let count = 0;
-        console.log(Rooms)
-        let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
+        let drawerNum;
+        if(Rooms[client.roomNumber] != undefined){
+          drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
+        }
         let drawer = Rooms[client.roomNumber].users[drawerNum]
         Drawer[client.roomNumber] = drawer
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
@@ -356,7 +358,10 @@ wss.on('connection', function connection(client) {
               }else if(Time[client.roomNumber] == -3){
                 type = 'DrawerLeft'
               }
-              let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+              let drawerNum;
+              if(Rooms[client.roomNumber] != undefined){
+                drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+              }
               let count = 0; 
               if(clientRooms[client.roomNumber] != undefined){
                 clientRooms[client.roomNumber].forEach((client)=>{
