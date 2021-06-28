@@ -406,7 +406,7 @@ wss.on('connection', function connection(client) {
           return user._id !== client.userid
         })
       let id = client.userid;
-      if(id == Drawer[client.roomNumber]._id){
+      if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
         Time[client.roomNumber] = -3; //drawer left
       }
       clientRooms[client.roomNumber].forEach((client)=>{
