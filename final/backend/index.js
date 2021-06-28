@@ -72,7 +72,7 @@ const validateRoom = ()=>{
 }
 
 wss.on('connection', function connection(client) {
-  console.log("connection");
+  //console.log("connection");
   client.id = uuid.v4();
   client.roomNumber = undefined
   client.sendEvent = (e)=> {
@@ -159,7 +159,10 @@ wss.on('connection', function connection(client) {
           
           //init correct poeple
           Correct[client.roomNumber] = 0;
-
+          
+          Drawer[client.roomNumber] = Rooms[client.roomNumber].users[0]
+          //set time
+          Time[client.roomNumber] = MAXTIME+1;
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type:'START',
@@ -368,6 +371,8 @@ wss.on('connection', function connection(client) {
                 drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
                 Drawer[client.roomNumber] = Rooms[client.roomNumber].users[drawerNum]
               }
+              //set time
+              Time[client.roomNumber] = MAXTIME+1;
               let count = 0; 
               if(clientRooms[client.roomNumber] != undefined){
                 clientRooms[client.roomNumber].forEach((client)=>{
@@ -399,7 +404,7 @@ wss.on('connection', function connection(client) {
   });
 
   client.once('close',() => {
-    console.log("a client closing");
+    //console.log("a client closing");
     if(client.roomNumber !== undefined){
       if(clientRooms[client.roomNumber] !== undefined){
         clientRooms[client.roomNumber].delete(client);
@@ -410,7 +415,7 @@ wss.on('connection', function connection(client) {
       let id = client.userid;
       if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
         //re-find drawer
-        if(clientRooms[client.roomNumber] !== undefined && !(clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)) && Time[client.roomNumber] <= 0){
+        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size != 1 && Time[client.roomNumber] == MAXTIME+1 ){
           let drawerNum;
           if(Rooms[client.roomNumber] != undefined){
             drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
@@ -431,8 +436,7 @@ wss.on('connection', function connection(client) {
             })
           }
         }
-        Time[client.roomNumber] = -3; //drawer left
-        
+        Time[client.roomNumber] = -3; //drawer left        
       }
       if(clientRooms[client.roomNumber] !== undefined){
         clientRooms[client.roomNumber].forEach((client)=>{
