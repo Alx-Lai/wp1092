@@ -282,10 +282,12 @@ wss.on('connection', function connection(client) {
         let count = 0;
         let drawerNum;
         let drawer;
+        console.log(Rooms[client.roomNumber].users.length)
         if(Rooms[client.roomNumber] != undefined){
           drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
           drawer = Rooms[client.roomNumber].users[drawerNum]
         }
+        console.log("drawer is ", drawer, drawerNum)
         Drawer[client.roomNumber] = drawer
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
@@ -375,6 +377,7 @@ wss.on('connection', function connection(client) {
               Time[client.roomNumber] = MAXTIME+1;
               let count = 0; 
               if(clientRooms[client.roomNumber] != undefined){
+
                 clientRooms[client.roomNumber].forEach((client)=>{
                   client.sendEvent({
                     type: 'START',
@@ -413,17 +416,23 @@ wss.on('connection', function connection(client) {
         return user._id !== client.userid
       })
       let id = client.userid;
+      // console.log("someone left",id)
+      // console.log(Drawer[client.roomNumber]._id)
       if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
         //re-find drawer
-        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size != 1 && Time[client.roomNumber] == MAXTIME+1 ){
+        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size != 1 && (Time[client.roomNumber] == MAXTIME+1||Time[client.roomNumber] == -3) ){
           let drawerNum;
+          // console.log(Rooms[client.roomNumber].users.length)
           if(Rooms[client.roomNumber] != undefined){
             Rounds[client.roomNumber]+=1
             drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
           }
+          // console.log(Rooms[client.roomNumber].users[drawerNum])
+          Drawer[client.roomNumber] =  Rooms[client.roomNumber].users[drawerNum]
           let count = 0; 
           if(clientRooms[client.roomNumber] != undefined){
             clientRooms[client.roomNumber].forEach((client)=>{
+              if(count==drawerNum) console.log("send start to drawer", client.userid)
               client.sendEvent({
                 type: 'START',
                 data:{
@@ -437,7 +446,7 @@ wss.on('connection', function connection(client) {
             })
           }
         }
-        Time[client.roomNumber] = -3; //drawer left
+        Time[client.roomNumber] = -3;
 }
       if(clientRooms[client.roomNumber] !== undefined){
         clientRooms[client.roomNumber].forEach((client)=>{
