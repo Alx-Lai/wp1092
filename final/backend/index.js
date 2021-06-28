@@ -72,14 +72,16 @@ const validateRoom = ()=>{
 }
 
 wss.on('connection', function connection(client) {
+  console.log("connection");
   client.id = uuid.v4();
   client.roomNumber = undefined
-  client.sendEvent = (e)=> client.send(JSON.stringify(e))
+  client.sendEvent = (e)=> {
+    // if(e.type!="TIME") console.log("send:",e)
+    client.send(JSON.stringify(e))}
   client.on('message', async function incoming(message) {
     message = JSON.parse(message);
     const {type} = message
-    console.log(type)
-    
+    // console.log("receive:",type)
     switch(type){
       case 'JOIN':{
         const {
@@ -107,7 +109,7 @@ wss.on('connection', function connection(client) {
           Rooms[client.roomNumber].users = []
         }
         const messages = await MessageModel.find({roomNumber:client.roomNumber})
-        console.log(client.userid);
+        console.log('new user: ',client.userid);
         client.sendEvent({
           type: 'JOINALL',
           data:{
@@ -134,7 +136,7 @@ wss.on('connection', function connection(client) {
           //get problems
           const problem = await ProblemModel.find({});
           const answers = problem.map(n=>n.answer);
-          console.log(answers)
+          // console.log(answers)
           let arr = [];
           let len = answers.length;
           let anss = []
@@ -394,72 +396,78 @@ wss.on('connection', function connection(client) {
       }
     }
     // disconnected
-    client.once('close',() => {
-      if(client.roomNumber !== undefined){
-        if(clientRooms[client.roomNumber] !== undefined){
-          clientRooms[client.roomNumber].delete(client);
-        }
-        Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
-          return user._id !== client.userid
-        })
-        let id = client.userid;
-        if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
-          Time[client.roomNumber] = -3; //drawer left
-          //re-find drawer
-          if(clientRooms[client.roomNumber] !== undefined && !(clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)) && Time[client.roomNumber] <= 0){
-            let drawerNum;
-            if(Rooms[client.roomNumber] != undefined){
-              drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
-            }
-            let count = 0; 
-            if(clientRooms[client.roomNumber] != undefined){
-              clientRooms[client.roomNumber].forEach((client)=>{
-                client.sendEvent({
-                  type: 'START',
-                  data:{
-                    isdraw: count==drawerNum,
-                    answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
-                    isround0 : false,
-                    type
-                  }
-                })
-                count++;
-              })
-            }
-          }
-        }
-        if(clientRooms[client.roomNumber] !== undefined){
-          clientRooms[client.roomNumber].forEach((client)=>{
-            client.sendEvent({
-              type: 'LEAVE',
-              data:{
-                id
-              }
-            })
-          })
-        }
-        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)){
-          Rounds[client.roomNumber] = undefined;
-          clientRooms[client.roomNumber].forEach((client)=>{
-            client.sendEvent({
-              type: 'KICK',
-              data:{
-              }
-            })
-            client.roomNumber = undefined;
-          })
-          Rooms[client.roomNumber].users.map(async(user)=>{
-            await UserModel.deleteOne({user})
-          })
-          Rooms[client.roomNumber].users = [];
-          clientRooms[client.roomNumber] = undefined;
-        }
-      
-        UserModel.deleteOne({_id:id});
-      }
-    });
   });
+
+  client.once('close',() => {
+    console.log("a client closing");
+    if(client.roomNumber !== undefined){
+      if(clientRooms[client.roomNumber] !== undefined){
+        clientRooms[client.roomNumber].delete(client);
+      }
+      Rooms[client.roomNumber].users = Rooms[client.roomNumber].users.filter((user)=> {
+        return user._id !== client.userid
+      })
+      let id = client.userid;
+      if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
+        Time[client.roomNumber] = -3; //drawer left
+        //re-find drawer
+        // if(clientRooms[client.roomNumber] !== undefined && !(clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)) && Time[client.roomNumber] <= 0){
+        //   let drawerNum;
+        //   if(Rooms[client.roomNumber] != undefined){
+        //     drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+        //   }
+        //   let count = 0; 
+        //   if(clientRooms[client.roomNumber] != undefined){
+        //     clientRooms[client.roomNumber].forEach((client)=>{
+        //       client.sendEvent({
+        //         type: 'START',
+        //         data:{
+        //           isdraw: count==drawerNum,
+        //           answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
+        //           isround0 : false,
+        //           type
+        //         }
+        //       })
+        //       count++;
+        //     })
+        //   }
+        // }
+      }
+      if(clientRooms[client.roomNumber] !== undefined){
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.sendEvent({
+            type: 'LEAVE',
+            data:{
+              id
+            }
+          })
+        })
+      }
+      if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)){
+        Rounds[client.roomNumber] = undefined;
+        clientRooms[client.roomNumber].forEach((client)=>{
+          client.sendEvent({
+            type: 'KICK',
+            data:{
+            }
+          })
+          client.roomNumber = undefined;
+        })
+        Rooms[client.roomNumber].users.map(async(user)=>{
+          await UserModel.deleteOne({user})
+        })
+        Rooms[client.roomNumber].users = [];
+        clientRooms[client.roomNumber] = undefined;
+      }
+    
+      UserModel.deleteOne({_id:id});
+    }
+  });
+  
 });
+
+
+
 
 mongo.connect();
 
