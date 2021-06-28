@@ -125,7 +125,7 @@ wss.on('connection', function connection(client) {
 
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
-        if(clientRooms[client.roomNumber].size === 3 && !(Round[client.roomNumber] == undefined || Round[client.roomNumber] == MAXROUND)){
+        if(clientRooms[client.roomNumber].size === 3 && (Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
           Rounds[client.roomNumber] = 0;
           let count = 0;
           
@@ -291,6 +291,7 @@ wss.on('connection', function connection(client) {
         
         //assign drawer
         let count = 0;
+        console.log(Rooms)
         let drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
         let drawer = Rooms[client.roomNumber].users[drawerNum]
         Drawer[client.roomNumber] = drawer
