@@ -186,27 +186,9 @@ wss.on('connection', function connection(client) {
       }
       case "GETPROBLEM":{
         // console.log(message);
-        if(Answers[client.roomNumber]){
-          client.sendEvent({type: 'GETPROBLEM',data:{answers: Answers[client.roomNumber]}})
-          break;
-        }
         const problem = await ProblemModel.find({});
         const answers = problem.map(n=>n.answer);
-        let arr = [];
-        let len = answers.length;
-        let anss = []
-        for(var i=0;i<10;i++){
-          let tmp = Math.floor(Math.random()*len)
-          while(arr.includes(tmp)){
-            tmp = Math.floor(Math.random()*len);
-          }
-          arr.push(tmp);
-        }
-        for(var i=0;i<10;i++){
-          anss.push(answers[arr[i]])
-        }
-        Answers[client.roomNumber] = anss;
-        client.sendEvent({type: 'GETPROBLEM',data:{answers: anss}})
+        client.sendEvent({type: 'GETPROBLEM',data:{answers}})
         break;
       }
       case "GUESS":{
@@ -375,18 +357,20 @@ wss.on('connection', function connection(client) {
               }
               let drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
               let count = 0; 
-              clientRooms[client.roomNumber].forEach((client)=>{
-                client.sendEvent({
-                  type: 'START',
-                  data:{
-                    isdraw: count==drawerNum,
-                    answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
-                    isround0 : false,
-                    type
-                  }
+              if(clientRooms[client.roomNumber] != undefined){
+                clientRooms[client.roomNumber].forEach((client)=>{
+                  client.sendEvent({
+                    type: 'START',
+                    data:{
+                      isdraw: count==drawerNum,
+                      answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
+                      isround0 : false,
+                      type
+                    }
+                  })
+                  count++;
                 })
-                count++;
-              })
+              }
               //delete old message
               await MessageModel.deleteMany({roomNumber:client.roomNumber})
               Rounds[client.roomNumber]++;
@@ -447,6 +431,6 @@ wss.on('connection', function connection(client) {
 
 mongo.connect();
 
-server.listen(8080, () => {
-  console.log('Server listening at http://localhost:8080');
+server.listen(process.env.PORT || 8080, () => {
+  console.log(`Server listening at ${process.env.PORT || 8080}`);
 });
