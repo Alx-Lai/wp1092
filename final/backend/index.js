@@ -125,7 +125,7 @@ wss.on('connection', function connection(client) {
 
         Rooms[client.roomNumber].users.push(newUser);
         clientRooms[client.roomNumber].add(client);
-        if(clientRooms[client.roomNumber].size === 3){
+        if(clientRooms[client.roomNumber].size === 3 && !(Round[client.roomNumber] == undefined || Round[client.roomNumber] == MAXROUND)){
           Rounds[client.roomNumber] = 0;
           let count = 0;
           
@@ -419,7 +419,7 @@ wss.on('connection', function connection(client) {
             }
           })
         })
-        if(clientRooms[client.roomNumber].size == 1 &&(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
+        if(clientRooms[client.roomNumber].size == 1 && !(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
               type: 'KICK',
