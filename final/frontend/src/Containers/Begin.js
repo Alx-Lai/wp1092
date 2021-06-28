@@ -8,48 +8,6 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
     const [color, setcolor] = useState(0);
     const [colorhex, setcolorhex] = useState("#BAD4AA");
     const {joinRoom, status} = useGame({displayStatus});
-    const [keyPressed, setKeyPressed] = useState(false);
-    useEffect(
-        () => {
-            console.log(color);
-            setcolorhex(colorList[color])
-            setMe({name: me.name, me:true, score:0, color:colorList[color]});
-        }, 
-    [color])
-
-
-    function downHandler({ key }) {
-        console.log(key)
-        if (key === "Enter") {
-          setKeyPressed(true);
-        }
-      }
-      // If released key is our target key then set to false
-      const upHandler = ({ key }) => {
-        if (key === "Enter") {
-          setKeyPressed(false);
-        }
-    };
-    useEffect(() => {
-        if(keyPressed){
-            if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
-                else if (me.name.length>20) displayStatus({type:"error", msg:"name too long (>20)"})
-                else joinRoom(me);
-        }
-    }, [keyPressed])
-
-    useEffect(() => {
-        if(!start){
-        window.addEventListener("keydown", downHandler);
-        window.addEventListener("keyup", upHandler);
-        // Remove event listeners on cleanup
-        return () => {
-          window.removeEventListener("keydown", downHandler);
-          window.removeEventListener("keyup", upHandler);
-        };
-        }
-        
-    }, []);
 
 
     useEffect(() => {
@@ -73,7 +31,11 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
                 console.log("click");
                 setcolor((color==11)? 0: color+1)
             }} style={{ fontSize: '200%'}}/></span>
-            <Input className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{setMe({name: n.target.value, me:true, score:0, color:colorhex});}} />
+            <Input autoFocus={true} onPressEnter={()=>{
+                if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
+                else if (me.name.length>20) displayStatus({type:"error", msg:"name too long (>20)"})
+                else joinRoom(me); 
+            }} className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{setMe({name: n.target.value, me:true, score:0, color:colorhex});}} />
             <Button type="primary" onClick={()=>{
                 if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
                 else if (me.name.length>20) displayStatus({type:"error", msg:"name too long (>20)"})
