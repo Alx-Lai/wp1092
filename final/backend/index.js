@@ -55,7 +55,7 @@ let Correct = {};
 let Time = {};
 let Drawer = {}
 const MAXTIME = 100
-const MAXROUND = 2
+const MAXROUND = 10
 const validateRoom = ()=>{
   for(var i=0;i<RoomCount;i++){
     if(Rooms[RoomCount].users.length < 10){
@@ -413,7 +413,6 @@ wss.on('connection', function connection(client) {
         return user._id !== client.userid
       })
       let id = client.userid;
-      console.log("hi")
       if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
         //re-find drawer
         if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size != 1 && Time[client.roomNumber] == MAXTIME+1 ){

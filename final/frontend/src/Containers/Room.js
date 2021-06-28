@@ -40,10 +40,10 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
         setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"} in next round.`)
       }else if(data.type=="AllAC"){
         setdisplayTitle(`Everybody hit the answer!`);
-        setdisplayText(`good job guys!`)
+        setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"} in next round.`)
       }if(data.type=="DrawerLeft"){
         setdisplayTitle(`Drawer disconnected...`);
-        setdisplayText(`Wait for the next round...`)
+        setdisplayText(`You are ${(data.isdraw)?"drawing":"guessing"} in next round.`)
       }
       if(data.isdraw){
         setisdrawer(true);
