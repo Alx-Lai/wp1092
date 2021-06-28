@@ -274,10 +274,11 @@ wss.on('connection', function connection(client) {
         //assign drawer
         let count = 0;
         let drawerNum;
+        let drawer;
         if(Rooms[client.roomNumber] != undefined){
           drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
+          drawer = Rooms[client.roomNumber].users[drawerNum]
         }
-        let drawer = Rooms[client.roomNumber].users[drawerNum]
         Drawer[client.roomNumber] = drawer
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{
