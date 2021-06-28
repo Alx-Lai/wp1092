@@ -168,11 +168,12 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
             setguessinput("");
             setgamestart(false);
             setusernum(1);
-            let newme = me;
-            newme.draw = false;
-            setMe(newme);
-            setusers([newme]);
-            joinRoom(newme);
+            // let newme = me;
+            // newme.draw = false;
+            // setMe(newme);
+            // setusers([newme]);
+            // joinRoom(newme);
+            setStart(false);
           }, 6000);
       }
       if(status.type == "TIME"){
