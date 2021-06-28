@@ -9,6 +9,7 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
     const [color, setcolor] = useState(0);
     const [colorhex, setcolorhex] = useState("#BAD4AA");
     const {joinRoom, status} = useGame({displayStatus});
+    const [text, setText] = useState(me.name);
 
     useEffect(() => {
         if(status.type == "JOINALL"){ //{type:"JOIN", data:[{name, score, color}]}
@@ -29,11 +30,14 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
                 console.log("click");
                 setcolor((color==11)? 0: color+1)
             }} style={{ fontSize: '200%'}}/></span>
-            <Input autoFocus={true} onPressEnter={()=>{
+            <Input value={text} autoFocus={true} onPressEnter={()=>{
                 if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
                 else if (me.name.length>20) displayStatus({type:"error", msg:"name too long (>20)"})
                 else joinRoom(me); 
-            }} className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{setMe({name: n.target.value, me:true, score:0, color:colorhex});}} />
+            }} className="LogIn-name" size="large" placeholder="enter your name" prefix={<UserOutlined />} onChange={n=>{
+                setMe({name: n.target.value, me:true, score:0, color:colorhex});
+                setText(n.target.value);
+            }} />
             <Button type="primary" onClick={()=>{
                 if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
                 else if (me.name.length>20) displayStatus({type:"error", msg:"name too long (>20)"})

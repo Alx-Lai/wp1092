@@ -137,6 +137,9 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
           setword("");
           setguessinput("");
           setusernum(1);
+          let newme = me;
+          newme.draw = false;
+          setMe(newme)
           // let newme = me;
           // newme.draw = false;
           // newme._id = "";
@@ -163,6 +166,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
           setdrawing(false);
           let timer = setTimeout(() => {
             //kick you out
+
             setdisplayTitle("Gartic");
             setdisplayText("made by Alex and Leyun");
             setroundTime(100);
@@ -171,6 +175,9 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
             setguessinput("");
             setgamestart(false);
             setusernum(1);
+            let newme = me;
+            newme.draw = false;
+            setMe(newme)
             // let newme = me;
             // newme.draw = false;
             // setMe(newme);
