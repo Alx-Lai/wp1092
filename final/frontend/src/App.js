@@ -2,7 +2,8 @@ import './App.css';
 import {message} from "antd";
 import Room from './Containers/Room';
 import Begin from './Containers/Begin';
-import { useState } from "react";
+import { useState, useEffect } from "react";
+// const LOCALSTORAGE_KEY = "gartic";
 
 const App= ()=> {
   const displayStatus = (payload) => {
@@ -20,8 +21,12 @@ const App= ()=> {
   }}}
 
   const [start, setStart] = useState(false);
+  // const savedMe = localStorage.getItem(LOCALSTORAGE_KEY);
   const [me, setMe] = useState({name: "", me:true, score:0, color:""});
   const [roomInfo, setRoomInfo] = useState([]);
+  
+  // useEffect(() => { if (start) {localStorage.setItem(LOCALSTORAGE_KEY, me);}}, [start]);
+
   return (
     <div className="App">
       {start? (<Room me={me} info={roomInfo} displayStatus={displayStatus} setMe={setMe} setStart={setStart}/>) : (<Begin start={start} setStart = {setStart} setMe={setMe} me = {me} setInfo={setRoomInfo} displayStatus={displayStatus}/>)}

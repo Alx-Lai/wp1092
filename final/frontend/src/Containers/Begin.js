@@ -3,12 +3,12 @@ import {Button, Input, Avatar, Badge} from "antd";
 import { UserOutlined, EditOutlined } from '@ant-design/icons';
 import { useState, useEffect} from "react";
 import useGame from "../Hooks/useGame";
+
 const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{  
     const colorList =["#BAD4AA","#73D2DE", "#FFE381","#C33C54","#A7ACD9", "#EF8354","#1C448E","#8CDEDC", "#38302E", "#FF715B","#FFA69E", "#424B54", "#84DCCF"]
     const [color, setcolor] = useState(0);
     const [colorhex, setcolorhex] = useState("#BAD4AA");
     const {joinRoom, status} = useGame({displayStatus});
-
 
     useEffect(() => {
         if(status.type == "JOINALL"){ //{type:"JOIN", data:[{name, score, color}]}
@@ -19,10 +19,8 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
             setStart(true)
         }
     }, [status])
+    useEffect(() => {setcolorhex(colorList[color])}, [color])
 
-    useEffect(() => {
-        console.log(colorhex);
-    }, [colorhex])
     return(
         <div className="LogIn-view">
             <p className="LogIn-title">Gartic</p>

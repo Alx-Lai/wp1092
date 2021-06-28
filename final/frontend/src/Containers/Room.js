@@ -60,8 +60,8 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
 
 
     useEffect(() => {
-      console.log(status.type)
       if(status.type == "START"){ //{type:"START"}
+        console.log(status.data)
         beforeRoundStart(status.data);
         setgamestart(true);
         setcanGuess(false);
@@ -74,6 +74,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
         }))
       }
       if(status.type == "ROUNDSTART"){ 
+        console.log(status.data)
         // setroundStart(performance.now());
         if(isdrawer){
           setdrawer(me._id)
