@@ -402,8 +402,8 @@ wss.on('connection', function connection(client) {
         let id = client.userid;
         if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
           Time[client.roomNumber] = -3; //drawer left
-          //refind drawer
-          if(!(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND))){
+          //re-find drawer
+          if(clientRooms[client.roomNumber] !== undefined && !(clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)) && Time[client.roomNumber] <= 0){
             let drawerNum;
             if(Rooms[client.roomNumber] != undefined){
               drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
@@ -435,7 +435,7 @@ wss.on('connection', function connection(client) {
             })
           })
         }
-        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND)){
+        if(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(isNaN(Rounds[client.roomNumber]) || Rounds[client.roomNumber] == MAXROUND)){
           Rounds[client.roomNumber] = undefined;
           clientRooms[client.roomNumber].forEach((client)=>{
             client.sendEvent({
