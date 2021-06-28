@@ -402,6 +402,28 @@ wss.on('connection', function connection(client) {
         let id = client.userid;
         if(Drawer[client.roomNumber] && id == Drawer[client.roomNumber]._id){
           Time[client.roomNumber] = -3; //drawer left
+          //refind drawer
+          if(!(clientRooms[client.roomNumber] !== undefined && clientRooms[client.roomNumber].size == 1 && !(Rounds[client.roomNumber] == undefined || Rounds[client.roomNumber] == MAXROUND))){
+            let drawerNum;
+            if(Rooms[client.roomNumber] != undefined){
+              drawerNum = (Rounds[client.roomNumber]+1)%Rooms[client.roomNumber].users.length;
+            }
+            let count = 0; 
+            if(clientRooms[client.roomNumber] != undefined){
+              clientRooms[client.roomNumber].forEach((client)=>{
+                client.sendEvent({
+                  type: 'START',
+                  data:{
+                    isdraw: count==drawerNum,
+                    answer: Answers[client.roomNumber][Rounds[client.roomNumber]],
+                    isround0 : false,
+                    type
+                  }
+                })
+                count++;
+              })
+            }
+          }
         }
         if(clientRooms[client.roomNumber] !== undefined){
           clientRooms[client.roomNumber].forEach((client)=>{
