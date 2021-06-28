@@ -334,6 +334,7 @@ wss.on('connection', function connection(client) {
             // console.log('Round '+Rounds[client.roomNumber]+' end')
             if((Rounds[client.roomNumber]+1) == MAXROUND){
               let winners = [];
+              Rounds[client.roomNumber]++;
               let winner = Rooms[client.roomNumber].users[0];
               for(var i=1;i<Rooms[client.roomNumber].users.length;i++){
                 if(winner.score < Rooms[client.roomNumber].users[i].score){
