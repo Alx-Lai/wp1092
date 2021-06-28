@@ -9,7 +9,7 @@ import CanvasView from '../Components/CanvasView';
 const Room = ({me, info, displayStatus, setMe, setStart})=>{ 
     const [users, setusers] = useState([me]); 
     const [usernum, setusernum] = useState(1);
-    const {status, confirmRoundStart, guessWord, sendDraw, joinRoom} = useGame();
+    const {status, confirmRoundStart, guessWord, sendDraw, joinRoom} = useGame({displayStatus});
     const [gamestart, setgamestart] = useState(false);
     const [displayTitle, setdisplayTitle] = useState("Gartic");
     const [displayText, setdisplayText] = useState("made by Alex and Leyun");
@@ -60,6 +60,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
 
 
     useEffect(() => {
+      console.log(status.type)
       if(status.type == "START"){ //{type:"START"}
         beforeRoundStart(status.data);
         setgamestart(true);
@@ -245,11 +246,13 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
         ))}</div>
             <Input.Search onChange={(e) => 
           setguessinput(e.target.value)} value={guessinput} id="searchBar" placeholder="guess here..." enterButton="send" disabled={!canGuess} onSearch={e=>{
-            if(guessinput=="") displayStatus({type:"error", msg:"guess can't not be blank"});
-            else{guessWord(e, me._id);
-            setguessinput("")}
-          }
-            }></Input.Search>
+            if(guessinput.trim()=="") displayStatus({type:"error", msg:"guess can't not be blank"});
+            else if(!(/^[a-zA-Z\s]*$/.test(guessinput)))displayStatus({type:"error", msg:"guess can't contain non-letter"});
+            else if(guessinput.length>=20) displayStatus({type:"error", msg:"answer won't be longer than 20 words"});
+            else{
+              guessWord(e, me._id);
+              setguessinput("")
+          }}}></Input.Search>
             </div>
             <div className="chatright">{(drawing)? <Progress strokeColor={progcolor} type="circle" percent={roundTime}  format={()=>word} showInfo={isdrawer} className="progress" />:<></>}</div>
           </div>

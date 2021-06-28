@@ -1,8 +1,37 @@
-import { useState } from "react";
-const client = new WebSocket('ws://localhost:8080');
+import { useState, useEffect } from "react";
+import {Modal} from 'antd';
+let client = new WebSocket('ws://localhost:8080');
 
-const useGame = () =>{
+const useGame = ({displayStatus}) =>{
     
+    const isOpen= (ws)=> { return ws.readyState === ws.OPEN }
+
+    const connect= async ()=> {
+        // client = new WebSocket('ws://localhost:8080');
+        // client.onopen = ()=> {
+        //     console.log("server reconnected");
+        // }
+    }
+
+    client.onclose = e=> {
+        error({title:"Server connection error" , msg:"sorry server is having some trouble, please refresh the page"})
+        // setTimeout(function() {
+        //     connect();
+        // }, 2000);
+    };
+
+    client.onerror = e =>{
+        // error({title:"Server crash" , msg:"sorry, server is having some trouble, please refresh the page"})
+        client.close();
+    }
+
+    const error=({title, msg})=> {
+        Modal.error({
+          title: title,
+          content: msg,
+        });
+      }
+
     const [status, setStatus] = useState({});
     client.onmessage = (message)=>{
         let {data} = message;
@@ -12,6 +41,11 @@ const useGame = () =>{
     }
 
     const sendData = async (data)=>{
+        if (!isOpen(client)){
+            // error({title:"Connection error" , msg:"sorry, server is having some trouble, please refresh the page"})
+            client.close();
+            return;
+        }
         client.send(JSON.stringify(await data));
     }
     const joinRoom = (me) => {
