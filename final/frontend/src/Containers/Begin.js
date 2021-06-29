@@ -41,6 +41,7 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
             <Button type="primary" onClick={()=>{
                 if(me.name.trim()=="") displayStatus({type:"error", msg:"name cannot be blank"})
                 else if (me.name.length>8) displayStatus({type:"error", msg:"name too long (>8)"})
+                else if (me.name.match(/[\u3400-\u9FBF]/) && me.name.length>5) displayStatus({type:"error", msg:"chinese name too long (<6)"})
                 else joinRoom(me);             
                 }}>Play</Button>
         </div>
