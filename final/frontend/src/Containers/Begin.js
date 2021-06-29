@@ -6,8 +6,8 @@ import useGame from "../Hooks/useGame";
 
 const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{  
     const colorList =["#BAD4AA","#73D2DE", "#FFE381","#C33C54","#A7ACD9", "#EF8354","#1C448E","#8CDEDC", "#38302E", "#FF715B","#FFA69E", "#424B54", "#84DCCF"]
-    const [color, setcolor] = useState(0);
-    const [colorhex, setcolorhex] = useState("#BAD4AA");
+    const [color, setcolor] = useState(colorList.indexOf(me.color));
+    const [colorhex, setcolorhex] = useState(me.color);
     const {joinRoom, status} = useGame({displayStatus});
     const [text, setText] = useState(me.name);
 

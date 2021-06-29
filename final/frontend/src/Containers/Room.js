@@ -249,7 +249,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
             <div className="Chat-messages">{messages.map((n,i)=>(
               (i!=messages.length-1)?(
               (n.correct)? 
-              <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hit the answer!`}</p>
+              <p className="correctFont">{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hits the answer!`}</p>
               :<p className="guessFont">{n.sender.name}: {n.body}</p>):(
                 (n.correct)? 
               <p className="correctFont" ref={messagesEndRef} >{(n.sender._id==me._id)?'You hit the answer!':`${n.sender.name} hit the answer!`}</p>
