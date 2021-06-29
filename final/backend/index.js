@@ -282,12 +282,10 @@ wss.on('connection', function connection(client) {
         let count = 0;
         let drawerNum;
         let drawer;
-        console.log(Rooms[client.roomNumber].users.length)
         if(Rooms[client.roomNumber] != undefined){
           drawerNum = Rounds[client.roomNumber]%Rooms[client.roomNumber].users.length;
           drawer = Rooms[client.roomNumber].users[drawerNum]
         }
-        console.log("drawer is ", drawer, drawerNum)
         Drawer[client.roomNumber] = drawer
         let answer = Answers[client.roomNumber][Rounds[client.roomNumber]]
         clientRooms[client.roomNumber].forEach((client)=>{

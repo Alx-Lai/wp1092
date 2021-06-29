@@ -159,7 +159,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
       }
       if(status.type == "KICK"){
         setdisplayTitle(`Everyone else disconnected...`);
-        setdisplayText(`let me find you another room...`);
+        setdisplayText(`please go to another room...`);
         setisdrawer(false);
           setisdrawing(false);
           setcanGuess(false);
