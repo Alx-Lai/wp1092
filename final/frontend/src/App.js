@@ -22,7 +22,7 @@ const App= ()=> {
 
   const [start, setStart] = useState(false);
   // const savedMe = localStorage.getItem(LOCALSTORAGE_KEY);
-  const [me, setMe] = useState({name: "", draw:false, me:true, score:0, color:""});
+  const [me, setMe] = useState({name: "", draw:false, correct: false, me:true, score:0, color:""});
   const [roomInfo, setRoomInfo] = useState([]);
   return (
     <div className="App">

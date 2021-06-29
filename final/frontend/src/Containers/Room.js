@@ -70,6 +70,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
         setusers(users.map(n=>{
           let a = n;
           a.draw = false;
+          a.correct = false;
           return a;
         }))
       }
@@ -139,6 +140,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
           setusernum(1);
           let newme = me;
           newme.draw = false;
+          newme.correct = false;
           setMe(newme)
           // let newme = me;
           // newme.draw = false;
@@ -193,6 +195,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
     if(status.type == "MESSAGE"){
         setusers(users.map((n=>{
           let a = n;
+          if(a._id==status.data.sender && status.data.correct) a.correct=true;
           if(a._id==status.data.sender) a.score+=status.data.score;
           else if(a._id==drawer) a.score+=status.data.drawerscore;
           return a;
