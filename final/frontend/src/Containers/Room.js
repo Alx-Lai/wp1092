@@ -210,7 +210,7 @@ const Room = ({me, info, displayStatus, setMe, setStart})=>{
     }, [status])
 
     useEffect(() => {
-      setmessages(info.messages)
+      // setmessages(info.messages)
       setusers([me,...info.userList.map(n=>{
         let a = n;
         a.me = false;
