@@ -21,6 +21,7 @@ const Begin = ({start, setStart, setMe, me, setInfo, displayStatus})=>{
         }
     }, [status])
     useEffect(() => {setcolorhex(colorList[color])}, [color])
+    useEffect(() => {setMe({name: me.name, draw:false, correct:false, me:true, score:0, color:colorhex})}, [colorhex])
 
     return(
         <div className="LogIn-view">
