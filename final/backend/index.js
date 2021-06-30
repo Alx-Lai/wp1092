@@ -313,14 +313,16 @@ wss.on('connection', function connection(client) {
         let countdown = setInterval(async()=>{
           if(Time[client.roomNumber] > 0){
             Time[client.roomNumber]--;
-            clientRooms[client.roomNumber].forEach((client)=>{
-              client.sendEvent({
-                  type:'TIME',
-                  data:{
-                    time:Time[client.roomNumber]
-                  }
+            if(clientRooms[client.roomNumber]!= undefined){
+              clientRooms[client.roomNumber].forEach((client)=>{
+                client.sendEvent({
+                    type:'TIME',
+                    data:{
+                      time:Time[client.roomNumber]
+                    }
+                })
               })
-            })
+            }
           }else{
             clearInterval(countdown);
             /************* *end* **************/
