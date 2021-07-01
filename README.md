@@ -18,7 +18,7 @@
 
     - #### **Deploy Link: ** https://alx-lai.github.io/gartic-frontend/ 
 
-      **重要：因為伺服器好像不會一直開著，depoly連結若閒置一段時間server就會自動關閉，並出現"Server connection error"的警告，是正常的，刷新頁面就好了。若還是不行，可嘗試先開啟 https://fake-garticio.herokuapp.com/ 連結，看到題庫後再打開該連結。**
+      **重要：因為伺服器好像不會一直開著，depoly連結若閒置一段時間server就會自動關閉，並出現"Server connection error"的警告，是正常的，請先開啟 https://fake-garticio.herokuapp.com/ 連結，看到題庫後再打開該連結。**
 
     - #### 專題製作心得
 
